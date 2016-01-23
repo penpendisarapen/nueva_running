@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Controller\API\Track;
+namespace Mavericks\Controller\API\Track;
 
 
 class SchoolRecordsController 

@@ -2,8 +2,8 @@
 set_include_path('src');
 require_once __DIR__ . '/vendor/autoload.php';
 
-use NuevaRunning\Controller\API\Provider\Track as TrackAPI;
-use NuevaRunning\Controller\Web\Provider\Track as TrackWeb;
+use Mavericks\Controller\API\Provider\Track as TrackAPI;
+use Mavericks\Controller\Web\Provider\Track as TrackWeb;
 
 $app = new Silex\Application();
 

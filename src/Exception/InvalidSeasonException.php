@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Exception;
+namespace Mavericks\Exception;
 
 
 class InvalidSeasonException extends \Exception

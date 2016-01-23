@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
-use NuevaRunning\Exception\InvalidStudentIdException;
+use Mavericks\Exception\InvalidStudentIdException;
 
 class StudentId
 {

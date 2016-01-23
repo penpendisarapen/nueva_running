@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Persistence;
+namespace Mavericks\Persistence;
 
 
 class StudentSQL extends SQLPersistence

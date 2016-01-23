@@ -1,13 +1,13 @@
 <?php
 
 
-namespace NuevaRunning\Controller\API;
+namespace Mavericks\Controller\API;
 
 
 
-use NuevaRunning\Entity\Season;
-use NuevaRunning\Entity\StudentId;
-use NuevaRunning\Repository\StudentService;
+use Mavericks\Entity\Season;
+use Mavericks\Entity\StudentId;
+use Mavericks\Repository\StudentService;
 use Silex\Application;
 
 class StudentController

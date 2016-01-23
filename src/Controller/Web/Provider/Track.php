@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Controller\Web\Provider;
+namespace Mavericks\Controller\Web\Provider;
 
 use Silex\Application;
 use Silex\ControllerProviderInterface;

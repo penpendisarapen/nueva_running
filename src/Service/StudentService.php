@@ -1,12 +1,12 @@
 <?php
 
 
-namespace NuevaRunning\Repository;
+namespace Mavericks\Repository;
 
 
-use NuevaRunning\Entity\Season;
-use NuevaRunning\Entity\StudentId;
-use NuevaRunning\Persistence\SQLPersistence;
+use Mavericks\Entity\Season;
+use Mavericks\Entity\StudentId;
+use Mavericks\Persistence\SQLPersistence;
 
 class StudentService
 {

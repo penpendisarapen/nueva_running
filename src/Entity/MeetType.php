@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
-use NuevaRunning\Exception\InvalidMeetType;
+use Mavericks\Exception\InvalidMeetType;
 
 class MeetType
 {

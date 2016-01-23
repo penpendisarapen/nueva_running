@@ -1,9 +1,9 @@
 <?php
 
-use NuevaRunning\ObjectFactory;
-use NuevaRunning\Controller\API\Track\StudentController;
-use NuevaRunning\Controller\API\Track\ScheduleController as TrackScheduleAPIController;
-use NuevaRunning\Controller\Web\Track\ScheduleController as TrackScheduleWebController;
+use Mavericks\ObjectFactory;
+use Mavericks\Controller\API\Track\StudentController;
+use Mavericks\Controller\API\Track\ScheduleController as TrackScheduleAPIController;
+use Mavericks\Controller\Web\Track\ScheduleController as TrackScheduleWebController;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__ . '/views'));

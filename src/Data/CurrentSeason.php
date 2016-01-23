@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Data;
+namespace Mavericks\Data;
 
 class CurrentSeason
 {

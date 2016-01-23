@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Controller\Web\Track;
+namespace Mavericks\Controller\Web\Track;
 
 
-use NuevaRunning\Service\Track\Schedule;
+use Mavericks\Service\Track\Schedule;
 use Silex\Application;
 
 class ScheduleController

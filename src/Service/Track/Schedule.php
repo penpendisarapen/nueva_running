@@ -1,10 +1,10 @@
 <?php
 
-namespace NuevaRunning\Service\Track;
+namespace Mavericks\Service\Track;
 
 
-use NuevaRunning\Data\CurrentSeason;
-use NuevaRunning\Persistence\TrackSQL;
+use Mavericks\Data\CurrentSeason;
+use Mavericks\Persistence\TrackSQL;
 
 class Schedule
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Persistence;
+namespace Mavericks\Persistence;
 
 use PDO;
-use NuevaRunning\Data\CurrentSeason;
+use Mavericks\Data\CurrentSeason;
 
 class SQLPersistence
 {

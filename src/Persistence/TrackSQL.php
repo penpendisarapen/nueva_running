@@ -1,9 +1,9 @@
 <?php
 
 
-namespace NuevaRunning\Persistence;
+namespace Mavericks\Persistence;
 
-use NuevaRunning\Data\CurrentSeason;
+use Mavericks\Data\CurrentSeason;
 
 class TrackSQL extends SQLPersistence
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
-use NuevaRunning\Exception\InvalidSeasonException;
+use Mavericks\Exception\InvalidSeasonException;
 
 class Season
 {

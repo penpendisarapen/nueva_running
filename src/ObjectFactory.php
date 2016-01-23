@@ -1,14 +1,14 @@
 <?php
 
 
-namespace NuevaRunning;
+namespace Mavericks;
 
 
-use NuevaRunning\Data\CurrentSeason;
-use NuevaRunning\Persistence\StudentSQL;
-use NuevaRunning\Persistence\TrackSQL;
-use NuevaRunning\Repository\StudentService;
-use NuevaRunning\Service\Track\Schedule;
+use Mavericks\Data\CurrentSeason;
+use Mavericks\Persistence\StudentSQL;
+use Mavericks\Persistence\TrackSQL;
+use Mavericks\Repository\StudentService;
+use Mavericks\Service\Track\Schedule;
 
 class ObjectFactory
 {

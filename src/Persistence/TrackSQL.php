@@ -1,0 +1,61 @@
+<?php
+
+
+namespace NuevaRunning\Persistence;
+
+use NuevaRunning\Data\CurrentSeason;
+
+class TrackSQL extends SQLPersistence
+{
+
+  /**
+   * @param CurrentSeason $CurrentSeason
+   * @return array
+   */
+  public function getCurrentSeasonSchedule()
+  {
+    $sql = "
+      SELECT
+        D.trackMeetDetailId,
+        D.meetName,
+        D.meetType,
+        DATE_FORMAT(M.meetDate, '%b %e') AS meetDate,
+        M.teamRequired,
+        M.isOptional,
+        M.resultsURL,
+        L.locationId,
+        L.locName,
+        L.locStreet1,
+        L.locStreet2,
+        L.locCity,
+        L.locZipCode
+      FROM
+        TrackMeet M
+      JOIN
+        TrackMeetDetails D ON D.trackMeetDetailId = M.trackMeetDetailId
+      LEFT JOIN
+        Location L ON M.locationId = L.locationId
+      WHERE
+        M.meetDate BETWEEN :seasonStart AND :seasonEnd
+      ORDER BY
+        M.meetDate
+    ";
+
+    $bind_params = array(
+      ':seasonStart' => $this->CurrentSeason->getStartDate(),
+      ':seasonEnd'   => $this->CurrentSeason->getEndDate()
+    );
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+
+}

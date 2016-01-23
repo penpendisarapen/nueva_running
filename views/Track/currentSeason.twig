@@ -1,0 +1,6 @@
+{# app/Resources/views/<PATH>/currentSeason.html.twig #}
+{% for meet in meetSchedule %}
+  {{ meet.meetDate }} - {{ meet.meetName }} <br>
+{% else %}
+  No meets have been scheduled.
+{% endfor %}

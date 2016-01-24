@@ -9,19 +9,18 @@
     <table class="table table-striped small">
       <thead>
       <tr>
+        <th>Meet</th>
         <th>Date</th>
         <th>Time</th>
-        <th>Meet</th>
+        <th>Results</th>
       </tr>
       </thead>
       <tbody>
       {% for meet in meetSchedule %}
         <tr>
-          <td>{{ meet.meetDate }}</td>
-          <td>{{ meet.meetTime }}</td>
           <td>
             <div>
-              {{ meet.meetName }}
+              <strong>{{ meet.meetName }}</strong>
             </div>
             <div>
               {{ meet.locName }}<br>
@@ -31,6 +30,13 @@
                 {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
               </a>
             </div>
+          </td>
+          <td>{{ meet.meetDate }}</td>
+          <td>{{ meet.meetTime }}</td>
+          <td style="vertical-align:middle;">
+            <a href="/track/records/meet/{{ meet.trackMeetId }}">
+              <button type="button" class="btn btn-xs btn-info">View</button>
+            </a>
           </td>
         </tr>
       {% else %}

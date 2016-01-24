@@ -4,7 +4,7 @@
 namespace Mavericks\Controller\API\Track;
 
 
-use Mavericks\Service\Track\Schedule;
+use Mavericks\Service\Track\MeetService;
 use Silex\Application;
 
 class ScheduleController
@@ -15,11 +15,11 @@ class ScheduleController
   private $App;
 
   /**
-   * @var Schedule
+   * @var MeetService
    */
   private $ScheduleService;
 
-  public function __construct(Application $App, Schedule $ScheduleService)
+  public function __construct(Application $App, MeetService $ScheduleService)
   {
     $this->App             = $App;
     $this->ScheduleService = $ScheduleService;

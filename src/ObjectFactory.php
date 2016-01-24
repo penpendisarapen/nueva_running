@@ -8,13 +8,25 @@ use Mavericks\Data\CurrentSeason;
 use Mavericks\Persistence\StudentSQL;
 use Mavericks\Persistence\TrackSQL;
 use Mavericks\Repository\StudentService;
-use Mavericks\Service\Track\Schedule;
+use Mavericks\Service\Track\MeetService;
+use Mavericks\Service\Track\RecordsService;
 
 class ObjectFactory
 {
-  public function createScheduleService()
+  /**
+   * @return MeetService
+   */
+  public function createMeetService()
   {
-    return new Schedule($this->createTrackSQL(), $this->createCurrentSeason());
+    return new MeetService($this->createTrackSQL(), $this->createCurrentSeason());
+  }
+
+  /**
+   * @return RecordsService
+   */
+  public function createRecordsService()
+  {
+    return new RecordsService($this->createTrackSQL());
   }
 
   /**

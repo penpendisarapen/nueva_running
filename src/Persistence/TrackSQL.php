@@ -19,7 +19,9 @@ class TrackSQL extends SQLPersistence
         D.trackMeetDetailId,
         D.meetName,
         D.meetType,
+        M.trackMeetId,
         DATE_FORMAT(M.meetDate, '%b %e') AS meetDate,
+        DATE_FORMAT(M.meetDate, '%l%p') AS meetTime,
         M.teamRequired,
         M.isOptional,
         M.resultsURL,
@@ -28,6 +30,7 @@ class TrackSQL extends SQLPersistence
         L.locStreet1,
         L.locStreet2,
         L.locCity,
+        L.locState,
         L.locZipCode
       FROM
         TrackMeet M

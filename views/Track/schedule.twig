@@ -1,0 +1,43 @@
+{% set activePage = 'schedule' %}
+{% extends "Track/base.twig" %}
+
+{% block pageTitle %}Schedule{% endblock %}
+
+{% block content %}
+
+  <div class="col-md-6">
+    <table class="table table-striped small">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Meet</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for meet in meetSchedule %}
+        <tr>
+          <td>{{ meet.meetDate }}</td>
+          <td>{{ meet.meetTime }}</td>
+          <td>
+            <div>
+              {{ meet.meetName }}
+            </div>
+            <div>
+              {{ meet.locName }}<br>
+              <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}" target="_blank">
+                {{ meet.locStreet1 }}<br>
+                {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
+                {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
+              </a>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <td>No meets have been scheduled.</td>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+

@@ -27,7 +27,7 @@ class ScheduleController
 
   public function renderCurrentSeasonSchedule()
   {
-    return $this->App['twig']->render('Track/currentSeason.twig', array(
+    return $this->App['twig']->render('Track/schedule.twig', array(
       'meetSchedule' => $this->ScheduleService->getCurrentSeason()
     ));
   }

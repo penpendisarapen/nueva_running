@@ -42,4 +42,9 @@ class MeetController
     return $this->App['twig']->render('Track/athletes.twig', array());
   }
 
+  public function renderMeetResults($meetId)
+  {
+    return $this->App['twig']->render('Track/meetResults.twig', array());
+  }
+
 }

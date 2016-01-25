@@ -11,7 +11,7 @@
       <tr>
         <th>Meet</th>
         <th>Date</th>
-        <th>Time</th>
+        <th>Attendance</th>
         <th>Results</th>
       </tr>
       </thead>
@@ -23,18 +23,25 @@
               <strong>{{ meet.meetName }}</strong>
             </div>
             <div>
-              {{ meet.locName }}<br>
-              <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}" target="_blank">
-                {{ meet.locStreet1 }}<br>
-                {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
-                {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
-              </a>
+              {{ meet.locName }}&nbsp;&nbsp;
+              (<a href="#" data-toggle="collapse" data-target="#address{{ meet.trackMeetId }}">address</a>)
+              <div id="address{{ meet.trackMeetId }}" class="collapse">
+                <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}"
+                   target="_blank">
+                  {{ meet.locStreet1 }}<br>
+                  {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
+                  {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
+                </a>
+              </div>
             </div>
           </td>
-          <td>{{ meet.meetDate }}</td>
-          <td>{{ meet.meetTime }}</td>
+          <td class="text-nowrap">{{ meet.meetDate }}, {{ meet.meetTime }}</td>
+          <td>
+            {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}<br>
+            {{ meet.teamRequired }}
+          </td>
           <td style="vertical-align:middle;">
-            <a href="/track/records/meet/{{ meet.trackMeetId }}">
+            <a href="/track/meet/results/{{ meet.trackMeetId }}">
               <button type="button" class="btn btn-xs btn-info">View</button>
             </a>
           </td>

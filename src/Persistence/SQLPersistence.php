@@ -9,9 +9,9 @@ use Mavericks\Data\CurrentSeason;
 class SQLPersistence
 {
   const HOST = 'localhost';
-  const USERNAME = 'nueva';
-  const DBNAME = 'nueva';
-  const PASSWORD = 'bbq922nv';
+  const USERNAME = 'username';
+  const DBNAME = 'nueva_running';
+  const PASSWORD = 'password';
 
   /**
    * @var

@@ -1,6 +1,7 @@
 <?php
 
 use Mavericks\ObjectFactory;
+use Mavericks\Controller\Web\Track\HomeController;
 use Mavericks\Controller\API\Track\StudentController;
 use Mavericks\Controller\API\Track\ScheduleController as TrackMeetAPIController;
 use Mavericks\Controller\Web\Track\MeetController as TrackMeetWebController;
@@ -21,6 +22,11 @@ $app['service.track.meet'] = $app->share(function() use ($Factory) {
 
 $app['service.track.records'] = $app->share(function() use ($Factory) {
   return $Factory->createRecordsService();
+});
+
+
+$app['controller.web.site'] = $app->share(function() use ($app) {
+  return new HomeController($app);
 });
 
 $app['controller.api.student'] = $app->share(function() use ($app) {

@@ -21,7 +21,7 @@ class TrackSQL extends SQLPersistence
         D.meetType,
         M.trackMeetId,
         DATE_FORMAT(M.meetDate, '%b %e') AS meetDate,
-        DATE_FORMAT(M.meetDate, '%l%p') AS meetTime,
+        DATE_FORMAT(M.meetDate, '%l:%i %p') AS meetTime,
         M.teamRequired,
         M.isOptional,
         M.resultsURL,

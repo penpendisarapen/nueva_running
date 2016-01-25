@@ -35,7 +35,10 @@
               </div>
             </div>
           </td>
-          <td class="text-nowrap">{{ meet.meetDate }}, {{ meet.meetTime }}</td>
+          <td class="text-nowrap">
+            {{ meet.meetDate }}<br>
+            {{ meet.meetTime }}
+          </td>
           <td>
             {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}<br>
             {{ meet.teamRequired }}

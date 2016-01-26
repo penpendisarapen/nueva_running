@@ -10,6 +10,8 @@ $app = new Silex\Application();
 
 $app['debug'] = true;
 
+include __DIR__ . '/config/config.php';
+
 // register the necessary services and controllers
 include __DIR__ . '/registry.php';
 

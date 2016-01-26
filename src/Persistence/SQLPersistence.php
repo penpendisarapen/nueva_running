@@ -5,26 +5,28 @@ namespace Mavericks\Persistence;
 
 use PDO;
 use Mavericks\Data\CurrentSeason;
+use Silex\Application;
 
 class SQLPersistence
 {
-  const HOST = 'localhost';
-  const USERNAME = 'xxxxx';
-  const DBNAME = 'xxxxx';
-  const PASSWORD = 'xxxxx';
-
   /**
    * @var
    */
   protected $dbh;
 
   /**
+   * @var Application
+   */
+  private $App;
+
+  /**
    * @var CurrentSeason
    */
   protected $CurrentSeason;
 
-  public function __construct(CurrentSeason $CurrentSeason)
+  public function __construct(Application $App, CurrentSeason $CurrentSeason)
   {
+    $this->App           = $App;
     $this->CurrentSeason = $CurrentSeason;
   }
 
@@ -35,12 +37,13 @@ class SQLPersistence
   {
     if (!$this->dbh)
     {
-      $dsn = 'mysql:host=' . self::HOST . ';dbname=' . self::DBNAME;
-      $options = array (
+      $dbConfig = $this->App['config']['db'];
+      $dsn      = 'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbConfig['dbname'];
+      $options  = array(
         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
       );
 
-      $this->dbh = new PDO($dsn, self::USERNAME, self::PASSWORD, $options);
+      $this->dbh = new PDO($dsn, $dbConfig['username'], $dbConfig['password'], $options);
     }
 
     return $this->dbh;

@@ -10,7 +10,7 @@ use Mavericks\Controller\Web\Track\RecordsController as TrackRecordsWebControlle
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__ . '/views'));
 
-$Factory = new ObjectFactory();
+$Factory = new ObjectFactory($app);
 
 $app['service.student'] = $app->share(function() use ($Factory) {
   return $Factory->createStudentService();

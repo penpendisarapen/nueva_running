@@ -6,7 +6,12 @@
 {% block content %}
   {% for announcement in announcements %}
     <div class="well">
-      <div style="padding-bottom: 10px;"><strong>{{ announcement.date }}</strong></div>
+      <div style="padding-bottom: 10px;">
+        <strong>
+          {{ announcement.date }}<br>
+          {{ announcement.author }}
+        </strong>
+      </div>
       <div>{{ announcement.content|raw }}</div>
     </div>
   {% endfor %}

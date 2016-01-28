@@ -24,6 +24,8 @@ class TrackSQL extends SQLPersistence
         sport = 'track'
       AND
         announcementDate BETWEEN :seasonStart AND :seasonEnd
+      ORDER BY
+        announcementDate
       LIMIT $offset, $limit
     ";
 

@@ -28,6 +28,22 @@ class CurrentSeason
    */
   public function getStartDate()
   {
+    return sprintf("%d-%02d-01", $this->getStartYear(), self::SEASON_START_MONTH);
+  }
+
+  /**
+   * @return string
+   */
+  public function getEndDate()
+  {
+    return sprintf("%d-%02d-31", $this->getEndYear(), self::SEASON_START_MONTH - 1);
+  }
+
+  /**
+   * @return int
+   */
+  public function getStartYear()
+  {
     $year = $this->currentYear;
 
     if ($this->currentMonth < self::SEASON_START_MONTH)
@@ -35,10 +51,13 @@ class CurrentSeason
       $year--;
     }
 
-    return sprintf("%d-%02d-01", $year, self::SEASON_START_MONTH);
+    return $year;
   }
 
-  public function getEndDate()
+  /**
+   * @return int
+   */
+  public function getEndYear()
   {
     $year = $this->currentYear;
 
@@ -47,6 +66,6 @@ class CurrentSeason
       $year++;
     }
 
-    return sprintf("%d-%02d-31", $year, self::SEASON_START_MONTH - 1);
+    return $year;
   }
 }

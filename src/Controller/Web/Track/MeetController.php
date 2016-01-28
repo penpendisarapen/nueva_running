@@ -25,11 +25,6 @@ class MeetController
     $this->MeetService = $MeetService;
   }
 
-  public function renderHome()
-  {
-    return $this->App['twig']->render('Track/home.twig', array());
-  }
-
   public function renderCurrentSeasonSchedule()
   {
     return $this->App['twig']->render('Track/schedule.twig', array(

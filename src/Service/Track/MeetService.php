@@ -13,15 +13,9 @@ class MeetService
    */
   private $TrackSQL;
 
-  /**
-   * @var CurrentSeason
-   */
-  private $CurrentSeason;
-
-  public function __construct(TrackSQL $TrackSQL, CurrentSeason $CurrentSeason)
+  public function __construct(TrackSQL $TrackSQL)
   {
-    $this->TrackSQL      = $TrackSQL;
-    $this->CurrentSeason = $CurrentSeason;
+    $this->TrackSQL = $TrackSQL;
   }
 
   /**

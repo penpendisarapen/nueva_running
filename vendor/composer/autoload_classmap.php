@@ -11,9 +11,10 @@ return array(
     'Mavericks\\Controller\\API\\Track\\RecordsController' => $baseDir . '/src/Controller/API/Track/RecordsController.php',
     'Mavericks\\Controller\\API\\Track\\ScheduleController' => $baseDir . '/src/Controller/API/Track/ScheduleController.php',
     'Mavericks\\Controller\\API\\Track\\StudentController' => $baseDir . '/src/Controller/API/Track/StudentController.php',
+    'Mavericks\\Controller\\Web\\HomeController' => $baseDir . '/src/Controller/Web/HomeController.php',
     'Mavericks\\Controller\\Web\\Provider\\HomeRoutes' => $baseDir . '/src/Controller/Web/Provider/HomeRoutes.php',
     'Mavericks\\Controller\\Web\\Provider\\TrackRoutes' => $baseDir . '/src/Controller/Web/Provider/TrackRoutes.php',
-    'Mavericks\\Controller\\Web\\Track\\HomeController' => $baseDir . '/src/Controller/Web/HomeController.php',
+    'Mavericks\\Controller\\Web\\Track\\HomeController' => $baseDir . '/src/Controller/Web/Track/HomeController.php',
     'Mavericks\\Controller\\Web\\Track\\MeetController' => $baseDir . '/src/Controller/Web/Track/MeetController.php',
     'Mavericks\\Controller\\Web\\Track\\RecordsController' => $baseDir . '/src/Controller/Web/Track/RecordsController.php',
     'Mavericks\\Data\\CurrentSeason' => $baseDir . '/src/Data/CurrentSeason.php',
@@ -30,4 +31,5 @@ return array(
     'Mavericks\\Repository\\StudentService' => $baseDir . '/src/Service/StudentService.php',
     'Mavericks\\Service\\Track\\MeetService' => $baseDir . '/src/Service/Track/MeetService.php',
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
+    'NuevaRunning\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
 );

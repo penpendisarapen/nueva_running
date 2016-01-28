@@ -10,6 +10,7 @@ use Mavericks\Persistence\TrackSQL;
 use Mavericks\Repository\StudentService;
 use Mavericks\Service\Track\MeetService;
 use Mavericks\Service\Track\RecordsService;
+use NuevaRunning\Service\Track\TrackService;
 use Silex\Application;
 
 class ObjectFactory
@@ -24,12 +25,16 @@ class ObjectFactory
     $this->App = $App;
   }
 
+  public function createTrackService()
+  {
+    return new TrackService($this->createTrackSQL());
+  }
   /**
    * @return MeetService
    */
   public function createMeetService()
   {
-    return new MeetService($this->createTrackSQL(), $this->createCurrentSeason());
+    return new MeetService($this->createTrackSQL());
   }
 
   /**

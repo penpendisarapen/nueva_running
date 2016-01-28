@@ -12,7 +12,7 @@ class TrackRoutes implements ControllerProviderInterface
   {
     $track = $app["controllers_factory"];
 
-    $track->get("/", "controller.web.track.meet:renderHome");
+    $track->get("/", "controller.web.track.home:renderHome");
     $track->get("/schedule/", "controller.web.track.meet:renderCurrentSeasonSchedule");
     $track->get("/athletes/", "controller.web.track.meet:renderAthletes");
     $track->get("/records/", "controller.web.track.records:renderRecords");

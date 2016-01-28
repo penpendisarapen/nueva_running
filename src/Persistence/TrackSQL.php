@@ -9,6 +9,41 @@ class TrackSQL extends SQLPersistence
 {
 
   /**
+   * @return array
+   */
+  public function getCurrentSeasonAnnouncements($limit = 5, $offset = 0)
+  {
+    $sql = "
+      SELECT
+        content,
+        DATE_FORMAT(announcementDate, '%b %e, %Y') AS `date`,
+        author
+      FROM
+        Announcement
+      WHERE
+        sport = 'track'
+      AND
+        announcementDate BETWEEN :seasonStart AND :seasonEnd
+      LIMIT $offset, $limit
+    ";
+
+    $bind_params = array(
+      ':seasonStart' => $this->CurrentSeason->getStartDate(),
+      ':seasonEnd'   => $this->CurrentSeason->getEndDate()
+    );
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
    * @param CurrentSeason $CurrentSeason
    * @return array
    */

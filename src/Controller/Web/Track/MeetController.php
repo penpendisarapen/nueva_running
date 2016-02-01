@@ -39,7 +39,9 @@ class MeetController
 
   public function renderMeetResults($meetId)
   {
-    return $this->App['twig']->render('Track/meetResults.twig', array());
+    return $this->App['twig']->render('Track/meetResults.twig', array(
+      'meetResults' => $this->MeetService->getMeetResults($meetId)
+    ));
   }
 
 }

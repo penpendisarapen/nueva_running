@@ -22,6 +22,8 @@ return array(
     'Mavericks\\Entity\\Season' => $baseDir . '/src/Entity/Season.php',
     'Mavericks\\Entity\\StudentId' => $baseDir . '/src/Entity/StudentId.php',
     'Mavericks\\Exception\\InvalidMeetType' => $baseDir . '/src/Exception/InvalidMeetType.php',
+    'Mavericks\\Exception\\InvalidResultMeasurement' => $baseDir . '/src/Exception/InvalidResultMeasurement.php',
+    'Mavericks\\Exception\\InvalidResultTime' => $baseDir . '/src/Exception/InvalidResultTime.php',
     'Mavericks\\Exception\\InvalidSeasonException' => $baseDir . '/src/Exception/InvalidSeasonException.php',
     'Mavericks\\Exception\\InvalidStudentIdException' => $baseDir . '/src/Exception/InvalidStudentIdException.php',
     'Mavericks\\ObjectFactory' => $baseDir . '/src/ObjectFactory.php',
@@ -31,5 +33,8 @@ return array(
     'Mavericks\\Repository\\StudentService' => $baseDir . '/src/Service/StudentService.php',
     'Mavericks\\Service\\Track\\MeetService' => $baseDir . '/src/Service/Track/MeetService.php',
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
+    'NuevaRunning\\Entity\\Result' => $baseDir . '/src/Entity/Result.php',
+    'NuevaRunning\\Entity\\ResultMeasurement' => $baseDir . '/src/Entity/ResultMeasurement.php',
+    'NuevaRunning\\Entity\\ResultTime' => $baseDir . '/src/Entity/ResultTime.php',
     'NuevaRunning\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
 );

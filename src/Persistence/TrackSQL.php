@@ -46,7 +46,6 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
-   * @param CurrentSeason $CurrentSeason
    * @return array
    */
   public function getCurrentSeasonSchedule()
@@ -97,5 +96,87 @@ class TrackSQL extends SQLPersistence
     }
   }
 
+  /**
+   * @param $meetId
+   * @return array
+   */
+  public function getEventsByMeetId($meetId)
+  {
+    $sql = "
+      SELECT
+        E.trackEventId,
+        E.eventGender,
+        T.eventName,
+        T.eventType,
+        T.raceType
+      FROM
+        TrackEvent E
+      JOIN
+        TrackEventType T ON E.trackEventTypeId = T.trackEventTypeId
+      WHERE
+        E.trackMeetId = :meetId
+      ORDER BY
+        E.eventGender DESC,
+        T.eventType,
+        T.raceType DESC,
+        T.distance
+    ";
+
+    $bind_params = array(':meetId' => $meetId);
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $eventId
+   * @return array
+   */
+  public function getResultsByEventId($eventId)
+  {
+    $sql = "
+      SELECT
+        S.studentId,
+        S.firstName,
+        S.lastName,
+        SE.overallPlace,
+        SE.medaled,
+        R.heatNumber,
+        R.resultInSeconds,
+        R.resultInInches,
+        R.place,
+        R.isFinal
+      FROM
+        TrackStudentEvent SE
+      JOIN
+        Student S ON SE.studentId = S.studentId
+      JOIN
+        TrackEventResult R ON SE.trackStudentEventId = R.trackStudentEventId
+      WHERE
+        SE.trackEventId = :eventId
+      ORDER BY
+        R.resultInSeconds,
+        R.resultInInches DESC
+    ";
+
+    $bind_params = array(':eventId' => $eventId);
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
 
 }

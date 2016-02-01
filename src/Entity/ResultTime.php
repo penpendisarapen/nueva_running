@@ -47,7 +47,7 @@ class ResultTime implements Result
       return $this->seconds;
     }
 
-    $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$s:%2$s:%3$s.%4$02d' : '%2$s:%3$s.%4$02d';
+    $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$d:%2$02d:%3$02d.%4$02d' : '%2$d:%3$02d.%4$02d';
     $hours    = gmdate("H", $this->seconds);
     $minutes  = gmdate("m", $this->seconds);
     $seconds  = gmdate("s", $this->seconds);

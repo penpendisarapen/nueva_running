@@ -150,6 +150,7 @@ class TrackSQL extends SQLPersistence
       SELECT
         E.trackEventId,
         E.eventGender,
+        T.trackEventTypeId,
         T.eventName,
         T.eventType,
         T.raceType
@@ -215,6 +216,54 @@ class TrackSQL extends SQLPersistence
     try
     {
       return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $eventTypeId
+   * @param $gender
+   * @return int|null
+   */
+  public function getTopEventRecord($eventTypeId, $gender)
+  {
+    $sql = "
+      SELECT
+        R.resultInSeconds,
+        R.resultInInches,
+        T.eventType
+      FROM
+        TrackEventType T
+      JOIN
+        TrackEvent E ON T.trackEventTypeId = E.trackEventTypeId AND E.eventGender = :gender
+      JOIN
+        TrackStudentEvent SE ON E.trackEventId = SE.trackEventId
+      JOIN
+        TrackEventResult R ON SE.trackStudentEventId = R.trackStudentEventId
+      WHERE
+        T.trackEventTypeId = :eventTypeId
+      LIMIT 1;
+    ";
+
+    $bind_params = array(
+      ':gender'      => $gender,
+      ':eventTypeId' => $eventTypeId
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bind_params);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return (($results[0]['eventType'] == 'race') ? $results[0]['resultInSeconds'] : $results[0]['resultInInches']);
     }
     catch (\PDOException $e)
     {

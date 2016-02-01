@@ -8,6 +8,9 @@ use Mavericks\Exception\InvalidResultTime;
 
 class ResultTime implements Result
 {
+  const SECONDS_IN_HOUR = 3600;
+  const SECONDS_IN_MINUTE = 60;
+
   /**
    * @var float
    */
@@ -39,9 +42,19 @@ class ResultTime implements Result
    */
   public function getResult()
   {
-    $fraction = 100 * ($this->seconds - (int)$this->seconds);
+    if ($this->seconds < self::SECONDS_IN_MINUTE)
+    {
+      return $this->seconds;
+    }
 
-    return sprintf("%s.%02d", gmdate($this->getTimeFormat(), (int)$this->seconds), $fraction);
+    $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$s:%2$s:%3$s.%4$02d' : '%2$s:%3$s.%4$02d';
+    $hours    = gmdate("H", $this->seconds);
+    $minutes  = gmdate("m", $this->seconds);
+    $seconds  = gmdate("s", $this->seconds);
+    $parts    = explode(".", $this->seconds);
+    $fraction = $parts[1];
+
+    return sprintf($format, $hours, $minutes, $seconds, $fraction);
   }
 
   /**
@@ -64,19 +77,4 @@ class ResultTime implements Result
     }
   }
 
-  private function getTimeFormat()
-  {
-    if  ($this->seconds >= 3600)
-    {
-      return "H:i:s";
-    }
-    elseif ($this->seconds >= 60)
-    {
-      return "i:s";
-    }
-    else
-    {
-      return "s";
-    }
-  }
 }

@@ -100,6 +100,50 @@ class TrackSQL extends SQLPersistence
    * @param $meetId
    * @return array
    */
+  public function getMeetDetailsById($meetId)
+  {
+    $sql = "
+      SELECT
+        D.meetName,
+        DATE_FORMAT(M.meetDate, '%b %e, %Y') AS meetDate,
+        M.resultsURL,
+        L.locName,
+        L.locCity,
+        L.locState
+      FROM
+        TrackMeet M
+      JOIN
+        TrackMeetDetails D ON D.trackMeetDetailId = M.trackMeetDetailId
+      LEFT JOIN
+        Location L ON M.locationId = L.locationId
+      WHERE
+        M.trackMeetId = :meetId
+    ";
+
+    $bind_params = array(':meetId' => $meetId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bind_params);
+
+      if (empty($results))
+      {
+        return array();
+      }
+
+      return $results[0];
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $meetId
+   * @return array
+   */
   public function getEventsByMeetId($meetId)
   {
     $sql = "

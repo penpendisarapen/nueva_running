@@ -26,6 +26,10 @@ class MeetService
     return $this->TrackSQL->getCurrentSeasonSchedule();
   }
 
+  public function getMeetDetails($meetId)
+  {
+    return $this->TrackSQL->getMeetDetailsById($meetId);
+  }
   /**
    * @param $meetId
    * @return array

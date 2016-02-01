@@ -4,6 +4,14 @@
 {% block pageTitle %}Meet Results{% endblock %}
 
 {% block content %}
+  <div>
+    <h4>{{ meetDetails.meetName }} - {{ meetDetails.meetDate }}</h4>
+  </div>
+  <div>
+    {{ meetDetails.locName }}<br>
+    {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
+    {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
+  </div>
   {% for event in meetResults %}
     <div class="page-header" style="padding-bottom: 0;">
       <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
@@ -40,6 +48,6 @@
       </tbody>
     </table>
   {%  else %}
-    <div>Results have not been posted.</div>
+    <div>Results have not been posted for the meet.</div>
   {% endfor %}
 {% endblock %}

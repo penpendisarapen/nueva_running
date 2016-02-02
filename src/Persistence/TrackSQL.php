@@ -3,8 +3,6 @@
 
 namespace Mavericks\Persistence;
 
-use Mavericks\Data\CurrentSeason;
-
 class TrackSQL extends SQLPersistence
 {
 
@@ -61,6 +59,7 @@ class TrackSQL extends SQLPersistence
         M.teamRequired,
         M.isOptional,
         M.resultsURL,
+        M.meetSubName,
         L.locationId,
         L.locName,
         L.locStreet1,
@@ -107,6 +106,7 @@ class TrackSQL extends SQLPersistence
         D.meetName,
         DATE_FORMAT(M.meetDate, '%b %e, %Y') AS meetDate,
         M.resultsURL,
+        M.meetSubName,
         L.locName,
         L.locCity,
         L.locState
@@ -270,6 +270,11 @@ class TrackSQL extends SQLPersistence
       error_log($e->getMessage());
       return array('error');
     }
+  }
+
+  public function getPersonalRecord($eventTypeId, $studentId)
+  {
+
   }
 
 }

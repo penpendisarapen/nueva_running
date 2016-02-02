@@ -5,7 +5,10 @@
 
 {% block content %}
   <div>
-    <h4>{{ meetDetails.meetName }} - {{ meetDetails.meetDate }}</h4>
+    <h4>
+      {{ meetDetails.meetName }}
+      {% if meetDetails.meetSubName %}{{ meetDetails.meetSubName }}{% endif %}
+      - {{ meetDetails.meetDate }}</h4>
   </div>
   <div>
     {{ meetDetails.locName }}<br>
@@ -34,7 +37,13 @@
           <td class="text-nowrap">
             {{ result.firstName }} {{ result.lastName }}
             {% if result.medaled %}
-              <img src="/assets/images/icons/medal.png" width="25" height="25">
+              {% if result.overallPlace == 1 %}
+                <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
+              {% elseif result.overallPlace == 2 %}
+                <img src="/assets/images/icons/silver_medal.png" width="20" height="20">
+              {% else %}
+                <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
+              {% endif %}
             {% endif %}
           </td>
         {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}

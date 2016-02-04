@@ -197,7 +197,9 @@ class TrackSQL extends SQLPersistence
         R.resultInSeconds,
         R.resultInInches,
         R.place,
-        R.isFinal
+        R.isFinal,
+        R.setSchoolRecord,
+        R.setPersonalRecord
       FROM
         TrackStudentEvent SE
       JOIN

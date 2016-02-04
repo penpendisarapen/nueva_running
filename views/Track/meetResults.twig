@@ -49,6 +49,12 @@
                   <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
                 {% endif %}
               {% endif %}
+              {% if result.setSchoolRecord %}
+                <img src="/assets/images/icons/red_star.png" width="20" height="20">
+              {% endif %}
+              {% if result.setPersonalRecord %}
+                <img src="/assets/images/icons/blue_star.png" width="20" height="20">
+              {% endif %}
             </td>
           {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
             <td class="text-nowrap text-right">{{ result.result }}</td>
@@ -107,4 +113,8 @@
       </tbody>
     {% endfor %}
   {% endif %}
+
+  <div style="padding: 5px 0;"><img src="/assets/images/icons/gold_medal.png" width="25" height="25"> - Medaled</div>
+  <div style="padding: 5px 0;"><img src="/assets/images/icons/red_star.png" width="25" height="25"> - Set school record</div>
+  <div style="padding: 5px 0;"><img src="/assets/images/icons/blue_star.png" width="25" height="25"> - Set personal record</div>
 {% endblock %}

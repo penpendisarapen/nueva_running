@@ -15,27 +15,78 @@
     {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
     {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
   </div>
-  {% for event in meetResults %}
-    <div class="page-header" style="padding-bottom: 0;">
-      <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
-    </div>
 
-    <table class="table table-striped">
+  {% if meetResults is empty %}
+    <div>Results have not been posted for the meet.</div>
+  {% else %}
+    {% for event in meetResults.individual %}
+      <div class="page-header" style="padding-bottom: 0;">
+        <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Athlete</th>
+            {% if event.eventType == 'race' %}<th class="text-center">Heat</th>{% endif %}
+            <th class="text-right">Result</th>
+            <th class="text-center">Place</th>
+            <th class="text-center">Overall</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        {% for result in event.results %}
+          <tr>
+            <td class="text-nowrap">
+              {{ result.firstName }} {{ result.lastName }}
+              {% if result.medaled %}
+                {% if result.overallPlace == 1 %}
+                  <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
+                {% elseif result.overallPlace == 2 %}
+                  <img src="/assets/images/icons/silver_medal.png" width="20" height="20">
+                {% else %}
+                  <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
+                {% endif %}
+              {% endif %}
+            </td>
+          {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
+            <td class="text-nowrap text-right">{{ result.result }}</td>
+            <td class="text-center">{{ result.place }}</td>
+            <td class="text-center">{{ result.overallPlace }}</td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    {% endfor %}
+
+    {% for event in meetResults.relay %}
+      <div class="page-header" style="padding-bottom: 0;">
+        <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
+      </div>
+
+      <table class="table table-striped">
       <thead>
-        <tr>
-          <th>Athlete</th>
-          {% if event.eventType == 'race' %}<th class="text-center">Heat</th>{% endif %}
-          <th class="text-right">Result</th>
-          <th class="text-center">Place</th>
-          <th class="text-center">Overall</th>
-        </tr>
+      <tr>
+        <th>Athletes</th>
+        <th class="text-right">&nbsp;</th>
+        <th class="text-right">Heat</th>
+        <th class="text-right">Result</th>
+        <th class="text-center">Place</th>
+        <th class="text-center">Overall</th>
+      </tr>
       </thead>
       <tbody>
 
       {% for result in event.results %}
         <tr>
           <td class="text-nowrap">
-            {{ result.firstName }} {{ result.lastName }}
+            {% for member in result.members %}
+              {{ member.firstName }} {{ member.lastName }}<br>
+            {% endfor %}
+          </td>
+          <td class="text-center">
             {% if result.medaled %}
               {% if result.overallPlace == 1 %}
                 <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
@@ -46,7 +97,7 @@
               {% endif %}
             {% endif %}
           </td>
-        {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
+          <td class="text-center">{{ result.heatNumber }}</td>
           <td class="text-nowrap text-right">{{ result.result }}</td>
           <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>
@@ -54,8 +105,6 @@
       {% endfor %}
 
       </tbody>
-    </table>
-  {%  else %}
-    <div>Results have not been posted for the meet.</div>
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 {% endblock %}

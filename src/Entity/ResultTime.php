@@ -49,7 +49,7 @@ class ResultTime implements Result
 
     $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$d:%2$02d:%3$02d.%4$02d' : '%2$d:%3$02d.%4$02d';
     $hours    = gmdate("H", $this->seconds);
-    $minutes  = gmdate("m", $this->seconds);
+    $minutes  = gmdate("i", $this->seconds);
     $seconds  = gmdate("s", $this->seconds);
     $parts    = explode(".", $this->seconds);
     $fraction = $parts[1];

@@ -225,6 +225,74 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @param $eventId
+   * @return array
+   */
+  public function getRelayResultsByEventId($eventId)
+  {
+    $sql = "
+      SELECT
+        trackRelayTeamId,
+        relayTeamName,
+        result,
+        place,
+        medaled,
+        heatNumber,
+        overallPlace
+      FROM
+        TrackRelayTeam
+      WHERE
+        trackEventId = :eventId
+    ";
+
+    $bind_params = array(':eventId' => $eventId);
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $teamId
+   * @return array
+   */
+  public function getRelayMembersByTeamId($teamId)
+  {
+    $sql = "
+      SELECT
+        S.firstName,
+        S.lastName,
+        M.studentId,
+        M.individualDistance,
+        M.splitTime
+      FROM
+        TrackRelayTeamMember M
+      JOIN
+        Student S ON M.studentId = S.studentId
+      WHERE
+        trackRelayTeamId = :teamId;
+    ";
+
+    $bind_params = array(':teamId' => $teamId);
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
    * @param $eventTypeId
    * @param $gender
    * @return int|null

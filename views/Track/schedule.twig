@@ -19,7 +19,9 @@
       <tr>
         <td>
           <div>
-            <strong>{{ meet.meetName }}</strong>
+            <strong>
+              {{ meet.meetName }} {{ meet.meetSubName }}
+            </strong>
           </div>
           <div>
             {{ meet.locName }}&nbsp;&nbsp;
@@ -39,8 +41,8 @@
           {{ meet.meetTime }}
         </td>
         <td>
-          {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}<br>
-          {{ meet.teamRequired }}
+          {{ meet.teamRequired }}<br>
+          {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}
         </td>
         <td style="vertical-align:middle;">
           <a href="/track/meet/results/{{ meet.trackMeetId }}">

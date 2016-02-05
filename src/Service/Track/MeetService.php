@@ -36,13 +36,20 @@ class MeetService
   {
     return $this->TrackSQL->getMeetDetailsById($meetId);
   }
+
   /**
    * @param $meetId
    * @return array
    */
   public function getMeetResults($meetId)
   {
-    $events      = $this->TrackSQL->getEventsByMeetId($meetId);
+    $events = $this->TrackSQL->getEventsByMeetId($meetId);
+
+    if (empty($events))
+    {
+      return array();
+    }
+
     $meetResults = array(
       'individual' => array(),
       'relay'      => array()

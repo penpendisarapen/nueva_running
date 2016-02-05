@@ -240,7 +240,8 @@ class TrackSQL extends SQLPersistence
         place,
         medaled,
         heatNumber,
-        overallPlace
+        overallPlace,
+        setSchoolRecord
       FROM
         TrackRelayTeam
       WHERE

@@ -16,3 +16,11 @@ body {
 .theme-showcase .navbar .container {
     width: auto;
 }
+
+.pbm {
+    padding-bottom: 10px;
+}
+
+.pbl {
+    padding-bottom: 20px;
+}

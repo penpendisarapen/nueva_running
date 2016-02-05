@@ -8,9 +8,10 @@
     <h4>
       {{ meetDetails.meetName }}
       {% if meetDetails.meetSubName %}{{ meetDetails.meetSubName }}{% endif %}
-      - {{ meetDetails.meetDate }}</h4>
+      - {{ meetDetails.meetDate }}
+    </h4>
   </div>
-  <div>
+  <div class="pbl">
     {{ meetDetails.locName }}<br>
     {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
     {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
@@ -19,6 +20,11 @@
   {% if meetResults is empty %}
     <div>Results have not been posted for the meet.</div>
   {% else %}
+
+    <div style="padding: 5px 0;"><img src="/assets/images/icons/gold_medal.png" width="25" height="25"> - Won medal</div>
+    <div style="padding: 5px 0;"><img src="/assets/images/icons/red_star.png" width="25" height="25"> - Set school record</div>
+    <div style="padding: 5px 0;"><img src="/assets/images/icons/blue_star.png" width="25" height="25"> - Set personal record</div>
+
     {% for event in meetResults.individual %}
       <div class="page-header" style="padding-bottom: 0;">
         <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
@@ -49,9 +55,11 @@
                   <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
                 {% endif %}
               {% endif %}
+
               {% if result.setSchoolRecord %}
                 <img src="/assets/images/icons/red_star.png" width="20" height="20">
               {% endif %}
+
               {% if result.setPersonalRecord %}
                 <img src="/assets/images/icons/blue_star.png" width="20" height="20">
               {% endif %}
@@ -102,6 +110,10 @@
                 <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
               {% endif %}
             {% endif %}
+
+            {% if result.setSchoolRecord %}
+              <img src="/assets/images/icons/red_star.png" width="20" height="20">
+            {% endif %}
           </td>
           <td class="text-center">{{ result.heatNumber }}</td>
           <td class="text-nowrap text-right">{{ result.result }}</td>
@@ -115,7 +127,4 @@
     {% endfor %}
   {% endif %}
 
-  <div style="padding: 5px 0;"><img src="/assets/images/icons/gold_medal.png" width="25" height="25"> - Won medal</div>
-  <div style="padding: 5px 0;"><img src="/assets/images/icons/red_star.png" width="25" height="25"> - Set school record</div>
-  <div style="padding: 5px 0;"><img src="/assets/images/icons/blue_star.png" width="25" height="25"> - Set personal record</div>
 {% endblock %}

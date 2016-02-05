@@ -150,6 +150,7 @@ class TrackSQL extends SQLPersistence
       SELECT
         E.trackEventId,
         E.eventGender,
+        E.eventSubType,
         T.trackEventTypeId,
         T.eventName,
         T.eventType,

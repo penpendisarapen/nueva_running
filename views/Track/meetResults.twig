@@ -27,7 +27,11 @@
 
     {% for event in meetResults.individual %}
       <div class="page-header" style="padding-bottom: 0;">
-        <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
+        <h4>
+          {{ event.eventGender }}
+          {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
+          {{ event.eventName }}
+        </h4>
       </div>
 
       <table class="table table-striped">

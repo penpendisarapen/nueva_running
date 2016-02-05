@@ -52,7 +52,7 @@ class ResultTime implements Result
     $minutes  = gmdate("i", $this->seconds);
     $seconds  = gmdate("s", $this->seconds);
     $parts    = explode(".", $this->seconds);
-    $fraction = $parts[1];
+    $fraction = isset($parts[1]) ? $parts[1] : '00';
 
     return sprintf($format, $hours, $minutes, $seconds, $fraction);
   }

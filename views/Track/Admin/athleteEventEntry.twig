@@ -1,0 +1,40 @@
+{% set activePage = 'schedule' %}
+{% extends "Track/base.twig" %}
+
+{% block pageTitle %}Meet Results{% endblock %}
+
+{% block header %}
+  <!-- Custom styles for this template -->
+  <link href="/assets/css/base.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script>
+    $(function() {
+      var athletes = {{ athletes|raw }};
+
+      $( "#athlete" ).autocomplete({
+        minLength: 0,
+        source: athletes,
+        focus: function( event, ui ) {
+          $( "#athlete" ).val( ui.item.label );
+          return false;
+        },
+        select: function( event, ui ) {
+          $( "#athlete" ).val( ui.item.label );
+          $( "#athlete-id" ).val( ui.item.value );
+          return false;
+        }
+      })
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="page-header pbn"><h4>Athlete Event Entry</h4></div>
+  <form>
+    <div id="athlete-label">Select a student to add:</div>
+    <input id="athlete">
+    <input type="hidden" id="athlete-id">
+  </form>
+{% endblock %}

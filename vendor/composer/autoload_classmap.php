@@ -33,6 +33,7 @@ return array(
     'Mavericks\\Repository\\StudentService' => $baseDir . '/src/Service/StudentService.php',
     'Mavericks\\Service\\Track\\MeetService' => $baseDir . '/src/Service/Track/MeetService.php',
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
+    'NuevaRunning\\Controller\\Web\\Track\\AdminController' => $baseDir . '/src/Controller/Web/Track/AdminController.php',
     'NuevaRunning\\Entity\\Result' => $baseDir . '/src/Entity/Result.php',
     'NuevaRunning\\Entity\\ResultMeasurement' => $baseDir . '/src/Entity/ResultMeasurement.php',
     'NuevaRunning\\Entity\\ResultTime' => $baseDir . '/src/Entity/ResultTime.php',

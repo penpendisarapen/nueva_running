@@ -24,3 +24,7 @@ body {
 .pbl {
     padding-bottom: 20px;
 }
+
+.pbn {
+    padding-bottom: 0;
+}

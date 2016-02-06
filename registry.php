@@ -7,6 +7,7 @@ use Mavericks\Controller\API\Track\ScheduleController as TrackMeetAPIController;
 use Mavericks\Controller\Web\Track\MeetController as TrackMeetWebController;
 use Mavericks\Controller\Web\Track\RecordsController as TrackRecordsWebController;
 use Mavericks\Controller\Web\Track\HomeController as TrackHomeController;
+use NuevaRunning\Controller\Web\Track\AdminController as TrackAdminController;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__ . '/views'));
@@ -51,4 +52,8 @@ $app['controller.web.track.meet'] = $app->share(function() use ($app) {
 
 $app['controller.web.track.records'] = $app->share(function() use ($app) {
   return new TrackRecordsWebController($app, $app['service.track.records']);
+});
+
+$app ['controller.web.track.admin'] = $app->share(function() use ($app) {
+  return new TrackAdminController($app, $app['service.track.meet']);
 });

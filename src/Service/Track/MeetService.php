@@ -2,6 +2,7 @@
 
 namespace Mavericks\Service\Track;
 
+use Mavericks\Entity\Season;
 use Mavericks\Persistence\TrackSQL;
 use NuevaRunning\Entity\ResultMeasurement;
 use NuevaRunning\Entity\ResultTime;
@@ -32,6 +33,40 @@ class MeetService
     return $this->TrackSQL->getCurrentSeasonSchedule();
   }
 
+  /**
+   * @param $meetId
+   * @return Season
+   */
+  public function getSeasonByMeetId($meetId)
+  {
+    $season = $this->TrackSQL->getSeasonByMeetId($meetId);
+    return new Season($season);
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getAthletesBySeasonForAutocomplete(Season $Season)
+  {
+    $data     = $this->TrackSQL->getStudentsBySeason($Season);
+    $athletes = array();
+
+    foreach ($data as $student)
+    {
+      $athletes[] = array(
+        'value'   => $student['studentId'],
+        'label' => $student['firstName'] . ' ' . $student['lastName']
+      );
+    }
+
+    return $athletes;
+  }
+
+  /**
+   * @param $meetId
+   * @return array
+   */
   public function getMeetDetails($meetId)
   {
     return $this->TrackSQL->getMeetDetailsById($meetId);

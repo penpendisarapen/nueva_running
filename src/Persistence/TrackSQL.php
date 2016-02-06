@@ -3,10 +3,14 @@
 
 namespace Mavericks\Persistence;
 
+use Mavericks\Entity\Season;
+
 class TrackSQL extends SQLPersistence
 {
 
   /**
+   * @param int $limit
+   * @param int $offset
    * @return array
    */
   public function getCurrentSeasonAnnouncements($limit = 5, $offset = 0)
@@ -87,6 +91,76 @@ class TrackSQL extends SQLPersistence
     try
     {
       return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getStudentsBySeason(Season $Season)
+  {
+    $sql = "
+      SELECT
+        S.studentId,
+        S.firstName,
+        S.lastName
+      FROM
+        TrackStudentSeason TSS
+      JOIN
+        Student S ON TSS.studentId = S.studentId
+      WHERE
+        TSS.season = :season
+      ORDER BY
+        S.firstName,
+        S.lastName
+    ";
+
+    $bind_params = array(':season' => $Season);
+
+    try
+    {
+      return $this->fetch($sql, $bind_params);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $meetId
+   * @return int|null
+   */
+  public function getSeasonByMeetId($meetId)
+  {
+    $sql = "
+      SELECT
+        DATE_FORMAT(meetDate, '%Y') AS season
+      FROM
+        TrackMeet
+      WHERE
+        trackMeetId = :meetId
+    ";
+
+    $bind_params = array(':meetId' => $meetId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bind_params);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results[0]['season'];
     }
     catch (\PDOException $e)
     {

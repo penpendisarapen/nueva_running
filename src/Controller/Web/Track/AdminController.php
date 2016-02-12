@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Controller\Web\Track;
+namespace Mavericks\Controller\Web\Track;
 
 use Mavericks\Entity\DB\TrackStudentEvent;
 use Silex\Application;

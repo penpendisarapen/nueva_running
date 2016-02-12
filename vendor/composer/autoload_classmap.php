@@ -14,6 +14,7 @@ return array(
     'Mavericks\\Controller\\Web\\HomeController' => $baseDir . '/src/Controller/Web/HomeController.php',
     'Mavericks\\Controller\\Web\\Provider\\HomeRoutes' => $baseDir . '/src/Controller/Web/Provider/HomeRoutes.php',
     'Mavericks\\Controller\\Web\\Provider\\TrackRoutes' => $baseDir . '/src/Controller/Web/Provider/TrackRoutes.php',
+    'Mavericks\\Controller\\Web\\Track\\AdminController' => $baseDir . '/src/Controller/Web/Track/AdminController.php',
     'Mavericks\\Controller\\Web\\Track\\HomeController' => $baseDir . '/src/Controller/Web/Track/HomeController.php',
     'Mavericks\\Controller\\Web\\Track\\MeetController' => $baseDir . '/src/Controller/Web/Track/MeetController.php',
     'Mavericks\\Controller\\Web\\Track\\RecordsController' => $baseDir . '/src/Controller/Web/Track/RecordsController.php',
@@ -41,5 +42,4 @@ return array(
     'Mavericks\\Service\\Track\\MeetService' => $baseDir . '/src/Service/Track/MeetService.php',
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
     'Mavericks\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
-    'NuevaRunning\\Controller\\Web\\Track\\AdminController' => $baseDir . '/src/Controller/Web/Track/AdminController.php',
 );

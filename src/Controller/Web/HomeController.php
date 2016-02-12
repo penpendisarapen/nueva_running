@@ -3,7 +3,7 @@
 
 namespace Mavericks\Controller\Web;
 
-use NuevaRunning\Service\Track\TrackService;
+use Mavericks\Service\Track\TrackService;
 use Silex\Application;
 
 class HomeController

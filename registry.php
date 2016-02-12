@@ -7,7 +7,7 @@ use Mavericks\Controller\API\Track\ScheduleController as TrackMeetAPIController;
 use Mavericks\Controller\Web\Track\MeetController as TrackMeetWebController;
 use Mavericks\Controller\Web\Track\RecordsController as TrackRecordsWebController;
 use Mavericks\Controller\Web\Track\HomeController as TrackHomeController;
-use NuevaRunning\Controller\Web\Track\AdminController as TrackAdminController;
+use Mavericks\Controller\Web\Track\AdminController as TrackAdminController;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__ . '/views'));

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
-use Mavericks\Exception\InvalidResultMeasurement;
+use Mavericks\Exception\InvalidResultMeasurementException;
 
 class ResultMeasurement implements Result
 {
@@ -50,7 +50,7 @@ class ResultMeasurement implements Result
   {
     if (!is_float($inches))
     {
-      throw new InvalidResultMeasurement("$inches must be a float value.");
+      throw new InvalidResultMeasurementException("$inches must be a float value.");
     }
   }
 }

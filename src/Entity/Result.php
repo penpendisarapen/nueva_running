@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
 interface Result

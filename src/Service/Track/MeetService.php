@@ -2,10 +2,13 @@
 
 namespace Mavericks\Service\Track;
 
+use Mavericks\Entity\DB\TrackEvent;
+use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\Season;
 use Mavericks\Persistence\TrackSQL;
-use NuevaRunning\Entity\ResultMeasurement;
-use NuevaRunning\Entity\ResultTime;
+use Mavericks\Entity\ResultMeasurement;
+use Mavericks\Entity\ResultTime;
+
 
 class MeetService
 {
@@ -47,7 +50,7 @@ class MeetService
    * @param Season $Season
    * @return array
    */
-  public function getAthletesBySeasonForAutocomplete(Season $Season)
+  public function getAthletesBySeason(Season $Season)
   {
     $data     = $this->TrackSQL->getStudentsBySeason($Season);
     $athletes = array();
@@ -55,8 +58,8 @@ class MeetService
     foreach ($data as $student)
     {
       $athletes[] = array(
-        'value'   => $student['studentId'],
-        'label' => $student['firstName'] . ' ' . $student['lastName']
+        'studentId'   => $student['studentId'],
+        'studentName' => $student['firstName'] . ' ' . $student['lastName']
       );
     }
 
@@ -76,28 +79,90 @@ class MeetService
    * @param $meetId
    * @return array
    */
+  public function getEventsByMeetId($meetId)
+  {
+    return $this->TrackSQL->getEventsByMeetId($meetId);
+  }
+
+  /**
+   * @param $meetId
+   * @return array
+   */
   public function getMeetResults($meetId)
   {
     $events = $this->TrackSQL->getEventsByMeetId($meetId);
-
-    if (empty($events))
-    {
-      return array();
-    }
 
     $meetResults = array(
       'individual' => array(),
       'relay'      => array()
     );
 
+    if (empty($events))
+    {
+      return $meetResults;
+    }
+
+
     foreach ($events as $event)
     {
-      $event['eventGender']              = $this->translateGender($event['eventGender']);
       $event['results']                  = $this->getEventResults($event['trackEventId'], $event['eventType'], $event['raceType']);
       $meetResults[$event['raceType']][] = $event;
     }
 
     return $meetResults;
+  }
+
+  /**
+   * @return array
+   */
+  public function getEventTypes()
+  {
+    return $this->TrackSQL->getEventTypes();
+  }
+
+  /**
+   * @param TrackEvent $TrackEvent
+   * @param TrackStudentEvent $TrackStudentEvent
+   * @return int|string
+   */
+  public function addAthleteToEvent(TrackEvent $TrackEvent, TrackStudentEvent $TrackStudentEvent)
+  {
+    if (!$TrackEvent->getTrackEventId())
+    {
+      $TrackStudentEvent->setTrackEventId($this->getMeetEventId($TrackEvent));
+    }
+
+    if (!$TrackStudentEvent->getTrackEventId())
+    {
+      return 0;
+    }
+
+    return $this->TrackSQL->addStudentEvent($TrackStudentEvent);
+  }
+
+  /**
+   * @param TrackEvent $TrackEvent
+   * @return int
+   */
+  public function getMeetEventId(TrackEvent $TrackEvent)
+  {
+    $eventId = $this->TrackSQL->getMeetEventId($TrackEvent);
+
+    if ($eventId)
+    {
+      return $eventId;
+    }
+
+    return $this->TrackSQL->addTrackEvent($TrackEvent);
+  }
+
+  /**
+   * @param TrackEvent $TrackEvent
+   * @return int
+   */
+  public function addMeetEvent(TrackEvent $TrackEvent)
+  {
+    return $this->TrackSQL->addTrackEvent($TrackEvent);
   }
 
   /**
@@ -157,20 +222,4 @@ class MeetService
     return $relayResults;
   }
 
-  /**
-   * @param $gender
-   * @return string
-   */
-  private function translateGender($gender)
-  {
-    switch ($gender)
-    {
-      case 'G':
-        return "Girls";
-      case 'B':
-        return "Boys";
-      case 'M':
-        return "Mixed";
-    }
-  }
 }

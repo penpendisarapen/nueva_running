@@ -68,7 +68,7 @@ class SQLPersistence
    * @param $params
    * @return array
    */
-  protected function fetch($sql, $params)
+  protected function fetch($sql, $params = array())
   {
     $statement = $this->query($sql, $params);
 
@@ -82,7 +82,7 @@ class SQLPersistence
    */
   protected function insert($sql, $params)
   {
-    $statement = $this->query($sql, $params);
+    $this->query($sql, $params);
 
     return $this->getDBHandle()->lastInsertId();
   }

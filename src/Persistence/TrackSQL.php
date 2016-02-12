@@ -3,6 +3,8 @@
 
 namespace Mavericks\Persistence;
 
+use Mavericks\Entity\DB\TrackEvent;
+use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\Season;
 
 class TrackSQL extends SQLPersistence
@@ -279,7 +281,7 @@ class TrackSQL extends SQLPersistence
         TrackStudentEvent SE
       JOIN
         Student S ON SE.studentId = S.studentId
-      JOIN
+      LEFT JOIN
         TrackEventResult R ON SE.trackStudentEventId = R.trackStudentEventId
       WHERE
         SE.trackEventId = :eventId
@@ -371,6 +373,32 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @return array
+   */
+  public function getEventTypes()
+  {
+    $sql = "
+      SELECT
+        trackEventTypeId,
+        eventName,
+        eventType,
+        raceType
+      FROM
+        TrackEventType
+    ";
+
+    try
+    {
+      return $this->fetch($sql);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
    * @param $eventTypeId
    * @param $gender
    * @return int|null
@@ -420,7 +448,138 @@ class TrackSQL extends SQLPersistence
 
   public function getPersonalRecord($eventTypeId, $studentId)
   {
-
   }
 
+  /**
+   * @param TrackEvent $TrackEvent
+   * @return int
+   */
+  public function getMeetEventId(TrackEvent $TrackEvent)
+  {
+    $sql = "
+      SELECT
+        trackEventId
+      FROM
+        TrackEvent
+      WHERE
+        trackMeetId = :trackMeetId
+      AND
+        trackEventTypeId = :trackEventTypeId
+      AND
+        eventGender = :eventGender
+    ";
+
+    $bindParams = array(
+      ':trackMeetId'      => $TrackEvent->getTrackMeetId(),
+      ':trackEventTypeId' => $TrackEvent->getTrackEventTypeId(),
+      ':eventGender'      => $TrackEvent->getEventGender(),
+    );
+
+    if ($TrackEvent->getEventSubType())
+    {
+      $sql .= 'AND eventSubType = :eventSubType';
+      $bindParams[':eventSubType'] = $TrackEvent->getEventSubType();
+    }
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return 0;
+      }
+
+      return $results[0]['trackEventId'];
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param TrackEvent $TrackEvent
+   * @return int
+   */
+  public function addTrackEvent(TrackEvent $TrackEvent)
+  {
+    $fields = array(
+      'trackMeetId',
+      'trackEventTypeId',
+      'eventGender',
+      'eventSubType'
+    );
+
+    $values = array(
+      ':trackMeetId',
+      ':trackEventTypeId',
+      ':eventGender',
+      ':eventSubType'
+    );
+
+    $bindParams = array(
+      ':trackMeetId'      => $TrackEvent->getTrackMeetId(),
+      ':trackEventTypeId' => $TrackEvent->getTrackEventTypeId(),
+      ':eventGender'      => $TrackEvent->getEventGender(),
+      ':eventSubType'     => $TrackEvent->getEventSubType()
+    );
+
+    if ($TrackEvent->getEventStartTime())
+    {
+      $fields[]                      = 'eventStartTime';
+      $values[]                      = ':eventStartTime';
+      $bindParams[':eventStartTime'] = $TrackEvent->getEventStartTime();
+    }
+
+    $sql = 'INSERT INTO TrackEvent (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param TrackStudentEvent $TrackStudentEvent
+   * @return int|string
+   */
+  public function addStudentEvent(TrackStudentEvent $TrackStudentEvent)
+  {
+    $fields = array(
+      'trackMeetId',
+      'trackEventId',
+      'studentId'
+    );
+
+    $values = array(
+      ':trackMeetId',
+      ':trackEventId',
+      ':studentId'
+    );
+
+    $bindParams = array(
+      ':trackMeetId'  => $TrackStudentEvent->getTrackMeetId(),
+      ':trackEventId' => $TrackStudentEvent->getTrackEventId(),
+      ':studentId'    => $TrackStudentEvent->getStudentId()
+    );
+
+    $sql = 'INSERT INTO TrackStudentEvent (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
 }

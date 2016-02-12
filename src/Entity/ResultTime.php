@@ -1,10 +1,10 @@
 <?php
 
 
-namespace NuevaRunning\Entity;
+namespace Mavericks\Entity;
 
 
-use Mavericks\Exception\InvalidResultTime;
+use Mavericks\Exception\InvalidResultTimeException;
 
 class ResultTime implements Result
 {
@@ -67,13 +67,13 @@ class ResultTime implements Result
 
   /**
    * @param $seconds
-   * @throws InvalidResultTime
+   * @throws InvalidResultTimeException
    */
   private function throwOnInvalidSeconds($seconds)
   {
     if (!is_float($seconds))
     {
-      throw new InvalidResultTime("$seconds must be a float value.");
+      throw new InvalidResultTimeException("$seconds must be a float value.");
     }
   }
 

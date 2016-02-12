@@ -1,7 +1,7 @@
 <?php
 
 
-namespace NuevaRunning\Service\Track;
+namespace Mavericks\Service\Track;
 
 
 use Mavericks\Persistence\TrackSQL;

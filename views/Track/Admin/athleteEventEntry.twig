@@ -3,38 +3,113 @@
 
 {% block pageTitle %}Meet Results{% endblock %}
 
-{% block header %}
-  <!-- Custom styles for this template -->
-  <link href="/assets/css/base.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-  <script>
-    $(function() {
-      var athletes = {{ athletes|raw }};
-
-      $( "#athlete" ).autocomplete({
-        minLength: 0,
-        source: athletes,
-        focus: function( event, ui ) {
-          $( "#athlete" ).val( ui.item.label );
-          return false;
-        },
-        select: function( event, ui ) {
-          $( "#athlete" ).val( ui.item.label );
-          $( "#athlete-id" ).val( ui.item.value );
-          return false;
-        }
-      })
-    });
-  </script>
-{% endblock %}
-
 {% block content %}
   <div class="page-header pbn"><h4>Athlete Event Entry</h4></div>
+
+  <div>
+    <h5>
+      {{ meetDetails.meetName }}
+      {% if meetDetails.meetSubName %}{{ meetDetails.meetSubName }}{% endif %}
+      - {{ meetDetails.meetDate }}
+    </h5>
+  </div>
+
+  <div class="pbl">
+    {{ meetDetails.locName }}<br>
+    {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
+    {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
+  </div>
+
   <form>
-    <div id="athlete-label">Select a student to add:</div>
-    <input id="athlete">
-    <input type="hidden" id="athlete-id">
+    <fieldset>
+      <input type="hidden" name="trackMeetId" value="{{ meetId }}">
+      <input type="hidden" name="addAthleteEvent" value="1">
+      <div class="row">
+        <div class="col-md-2">
+          <div id="athlete-label">Athlete:</div>
+          <div>
+            <select name="studentId">
+              <option value="">--Select--</option>
+              {% for athlete in athletes %}
+                <option value="{{ athlete.studentId }}">{{ athlete.studentName }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div>Event:</div>
+          <div>
+            <select name="trackEventTypeId">
+              <option value="">--Select--</option>
+              {% for event in events %}
+                <option value="{{ event.trackEventTypeId }}">{{ event.eventName }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <div>Gender:</div>
+          <div>
+            <select name="eventGender">
+              <option value="">--Select--</option>
+              <option value="Boys">Boys</option>
+              <option value="Girls">Girls</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div>Type:</div>
+          <div>
+            <select name="eventSubType">
+              <option value="">None</option>
+              <option value="Varsity">Varsity</option>
+              <option value="JV">JV</option>
+              <option value="Frosh-Soph">Frosh-Soph</option>
+              <option value="Frosh">Frosh</option>
+              <option value="Soph">Soph</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-sm btn-default">Submit</button>
+        </div>
+      </div>
+    </fieldset>
   </form>
+
+  <div class="pbt">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Event</th>
+        <th>Athlete</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for event in eventAthletes.individual %}
+        <tr>
+          <td>
+            <strong>
+            {{ event.eventGender }}
+            {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
+            {{ event.eventName }}
+            </strong>
+          </td>
+          <td class="text-nowrap">
+            {% for result in event.results %}
+              {{ result.firstName }} {{ result.lastName }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="2">
+            No events have been added.
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
 {% endblock %}

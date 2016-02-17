@@ -220,7 +220,7 @@
           <td class="text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
           <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>
-          <td>
+          <td class="text-right">
             <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updateModal{{ result.trackStudentEventId }}">
               Update Result
             </button>
@@ -247,7 +247,7 @@
                           <div class="col-md-4 text-right">
                             <strong>Enter result:</strong>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6 text-left">
                             {% if event.eventType == 'field' %}
                               <input type="text" name="resultFeet" id="resultFeet" value="0" size="2"> <label for="resultFeet">ft</label>
                               <input type="text" name="resultInches" id="resultInches" value="0.00" size="4"> <label for="resultInches">in</label>
@@ -263,7 +263,7 @@
                             <div class="col-md-4 text-right">
                               <label for="heatNumber">Heat number:</label>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 text-left">
                               <input type="text" name="heatNumber" id="heatNumber" size="2">
                             </div>
                           </div>
@@ -272,7 +272,7 @@
                             <div class="col-md-4 text-right">
                               <label for="place">Place in heat:</label>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 text-left">
                               <input type="text" name="place" id="place" size="2">
                             </div>
                           </div>
@@ -282,7 +282,7 @@
                           <div class="col-md-4 text-right">
                             <label for="overallPlace">Overall place:</label>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6 text-left">
                             <input type="text" name="overallPlace" id="overallPlace" size="2">
                           </div>
                         </div>
@@ -291,7 +291,7 @@
                           <div class="col-md-4 text-right">
                             <label for="medaled">Medaled?:</label>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6 text-left">
                             <input type="checkbox" name="medaled" id="medaled">
                           </div>
                         </div>
@@ -300,7 +300,7 @@
                           <div class="col-md-4 text-right">
                             <label for="setSchoolRecord">Set school record?:</label>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6 text-left">
                             <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord">
                           </div>
                         </div>
@@ -309,7 +309,7 @@
                           <div class="col-md-4 text-right">
                             <label for="setPersonalRecord">Set personal record?:</label>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6 text-left">
                             <input type="checkbox" name="setPersonalRecord" id="setPersonalRecord">
                           </div>
                         </div>

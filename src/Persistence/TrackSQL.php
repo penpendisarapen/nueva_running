@@ -4,8 +4,10 @@
 namespace Mavericks\Persistence;
 
 use Mavericks\Entity\DB\TrackEvent;
+use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\Season;
+use Maverics\Entity\DB\TrackRelayTeamMember;
 
 class TrackSQL extends SQLPersistence
 {
@@ -268,6 +270,7 @@ class TrackSQL extends SQLPersistence
         S.studentId,
         S.firstName,
         S.lastName,
+        SE.trackStudentEventId,
         SE.overallPlace,
         SE.medaled,
         R.heatNumber,
@@ -500,6 +503,55 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @param $trackEventId
+   * @return TrackEvent|null
+   */
+  public function getTrackEventById($trackEventId)
+  {
+    $sql = "
+      SELECT
+        trackEventId,
+        trackMeetId,
+        trackEventTypeId,
+        eventGender,
+        eventSubType,
+        eventStartTime
+      FROM
+        TrackEvent
+      WHERE
+        trackEventId = :trackEventId
+    ";
+
+    $bindParams = array(':trackEventId' => $trackEventId);
+
+    try
+    {
+      $results    = $this->fetch($sql, $bindParams);
+      $TrackEvent = new TrackEvent();
+
+      if (empty($results))
+      {
+        return $TrackEvent;
+      }
+
+      $TrackEvent
+        ->setTrackEventId($results[0]['trackEventId'])
+        ->setTrackMeetId($results[0]['trackMeetId'])
+        ->setTrackEventTypeId($results[0]['trackEventTypeId'])
+        ->setEventGender($results[0]['eventGender'])
+        ->setEventSubType($results[0]['eventSubType'])
+        ->setEventStartTime($results[0]['eventStartTime']);
+
+      return $TrackEvent;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return null;
+    }
+  }
+
+  /**
    * @param TrackEvent $TrackEvent
    * @return int
    */
@@ -547,6 +599,45 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @param TrackEvent $TrackEvent
+   * @return int
+   */
+  public function updateTrackEvent(TrackEvent $TrackEvent)
+  {
+    $sql = "
+      UPDATE
+        TrackEvent
+      SET
+        trackMeetId      = :trackMeetId,
+        trackEventTypeId = :trackEventTypeId,
+        eventGender      = :eventGender,
+        eventSubType     = :eventSubType,
+        eventStartTime   = :eventStartTime
+      WHERE
+        trackEventId = :trackEventId
+    ";
+
+    $bindParams = array(
+      ':trackEventId'     => $TrackEvent->getTrackEventId(),
+      ':trackMeetId'      => $TrackEvent->getTrackMeetId(),
+      ':trackEventTypeId' => $TrackEvent->getTrackEventTypeId(),
+      ':eventGender'      => $TrackEvent->getEventGender(),
+      ':eventSubType'     => $TrackEvent->getEventSubType(),
+      ':eventStartTime'   => $TrackEvent->setEventStartTime()
+    );
+
+    try
+    {
+      return $this->update($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
    * @param TrackStudentEvent $TrackStudentEvent
    * @return int|string
    */
@@ -575,6 +666,83 @@ class TrackSQL extends SQLPersistence
     try
     {
       return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  public function updateStudentEvent(TrackStudentEvent $TrackStudentEvent)
+  {}
+
+  public function addStudentEventResult()
+  {}
+
+  /**
+   * @param TrackRelayTeam $TrackRelayTeam
+   * @return int|string
+   */
+  public function addRelayTeam(TrackRelayTeam $TrackRelayTeam)
+  {
+    $fields = array(
+      'trackEventId',
+      'relayTeamName'
+    );
+
+    $values = array(
+      ':trackEventId',
+      ':relayTeamName'
+    );
+
+    $bindParams = array(
+      ':trackEventId'  => $TrackRelayTeam->getTrackEventId(),
+      ':relayTeamName' => $TrackRelayTeam->getRelayTeamName()
+    );
+
+    $sql = 'INSERT INTO TrackRelayTeam (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param TrackRelayTeamMember $TeamMember
+   * @return int|\PDOStatement
+   */
+  public function addRelayTeamMember(TrackRelayTeamMember $TeamMember)
+  {
+    $fields = array(
+      'trackRelayTeamId',
+      'studentId'
+    );
+
+    $values = array(
+      ':trackRelayTeamId',
+      ':studentId'
+    );
+
+    $bindParams = array(
+      ':trackRelayTeamId' => $TeamMember->getTrackRelayTeamId(),
+      ':studentId'        => $TeamMember->getStudentId()
+    );
+
+    $sql = 'INSERT INTO TrackRelayTeamMember (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+
+    print "$sql\n";
+    print_r($bindParams);
+
+    try
+    {
+      return $this->query($sql, $bindParams);
     }
     catch (\PDOException $e)
     {

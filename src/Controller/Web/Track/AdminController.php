@@ -3,7 +3,9 @@
 
 namespace Mavericks\Controller\Web\Track;
 
+use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
+use Maverics\Entity\DB\TrackRelayTeamMember;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Mavericks\Service\Track\MeetService;
@@ -38,14 +40,33 @@ class AdminController
     $Season = $this->MeetService->getSeasonByMeetId($meetId);
     $message = '';
 
-    if ($Request->get('addAthleteEvent'))
+    if ($Request->get('formType'))
     {
       $TrackEvent   = $this->createTrackEventFromRequest($Request);
-      $StudentEvent = $this->createStudentEventFromRequest($Request);
 
-      if ($this->MeetService->addAthleteToEvent($TrackEvent, $StudentEvent))
+      switch ($Request->get('formType'))
       {
-        $message = 'WIN!';
+        case 'event':
+          $StudentEvent = $this->createStudentEventFromRequest($Request);
+
+          if ($this->MeetService->addAthleteToEvent($TrackEvent, $StudentEvent))
+          {
+            $message = 'SUCCESS!';
+          }
+
+          break;
+        case 'relay':
+          $RelayTeam   = $this->createRelayTeamFromRequest($Request);
+          $TeamMembers = $this->createRelayTeamMembersFromRequest($Request);
+
+          if ($this->MeetService->addRelayTeamEvent($TrackEvent, $RelayTeam, $TeamMembers))
+          {
+            $message = 'SUCCESS!';
+          }
+
+          break;
+        case 'result':
+          break;
       }
     }
 
@@ -54,7 +75,7 @@ class AdminController
       'meetDetails'   => $this->MeetService->getMeetDetails($meetId),
       'athletes'      => $this->MeetService->getAthletesBySeason($Season),
       'events'        => $this->MeetService->getEventTypes(),
-      'eventAthletes' => $this->MeetService->getMeetResults($meetId),
+      'meetResults' => $this->MeetService->getMeetResults($meetId),
       'message'       => $message
     ));
   }
@@ -63,7 +84,7 @@ class AdminController
    * @param Request $Request
    * @return TrackEvent
    */
-  public function createTrackEventFromRequest(Request $Request)
+  private function createTrackEventFromRequest(Request $Request)
   {
     $TrackEvent = new TrackEvent();
     $TrackEvent
@@ -90,7 +111,7 @@ class AdminController
    * @param Request $Request
    * @return TrackStudentEvent
    */
-  public function createStudentEventFromRequest(Request $Request)
+  private function createStudentEventFromRequest(Request $Request)
   {
     $TrackStudentEvent = new TrackStudentEvent();
     $TrackStudentEvent
@@ -98,5 +119,27 @@ class AdminController
       ->setStudentId($Request->get('studentId'));
 
     return $TrackStudentEvent;
+  }
+
+  private function createRelayTeamFromRequest(Request $Request)
+  {
+    $RelayTeam = new TrackRelayTeam();
+    $RelayTeam->setRelayTeamName($Request->get('relayTeamName'));
+
+    return $RelayTeam;
+  }
+
+  private function createRelayTeamMembersFromRequest(Request $Request)
+  {
+    $TeamMembers = array();
+
+    foreach ($Request->get('studentId') as $studentId)
+    {
+      $TeamMember = new TrackRelayTeamMember();
+      $TeamMember->setStudentId($studentId);
+
+      $TeamMembers[] = $TeamMember;
+    }
+    return $TeamMembers;
   }
 }

@@ -3,11 +3,13 @@
 namespace Mavericks\Service\Track;
 
 use Mavericks\Entity\DB\TrackEvent;
+use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\Season;
 use Mavericks\Persistence\TrackSQL;
 use Mavericks\Entity\ResultMeasurement;
 use Mavericks\Entity\ResultTime;
+use Maverics\Entity\DB\TrackRelayTeamMember;
 
 
 class MeetService
@@ -102,7 +104,6 @@ class MeetService
       return $meetResults;
     }
 
-
     foreach ($events as $event)
     {
       $event['results']                  = $this->getEventResults($event['trackEventId'], $event['eventType'], $event['raceType']);
@@ -163,6 +164,40 @@ class MeetService
   public function addMeetEvent(TrackEvent $TrackEvent)
   {
     return $this->TrackSQL->addTrackEvent($TrackEvent);
+  }
+
+  /**
+   * @param TrackEvent $TrackEvent
+   * @param TrackRelayTeam $RelayTeam
+   * @param $TeamMembers TrackRelayTeamMember[]
+   * @return int
+   */
+  public function addRelayTeamEvent(TrackEvent $TrackEvent, TrackRelayTeam $RelayTeam, $TeamMembers)
+  {
+    if (!$TrackEvent->getTrackEventId())
+    {
+      $RelayTeam->setTrackEventId($this->getMeetEventId($TrackEvent));
+    }
+
+    if (!$RelayTeam->getTrackEventId())
+    {
+      return 0;
+    }
+
+    $trackRelayTeamId = $this->TrackSQL->addRelayTeam($RelayTeam);
+
+    if (!$trackRelayTeamId)
+    {
+      return 0;
+    }
+
+    foreach ($TeamMembers as $TeamMember)
+    {
+      $TeamMember->setTrackRelayTeamId($trackRelayTeamId);
+      $this->TrackSQL->addRelayTeamMember($TeamMember);
+    }
+
+    return 1;
   }
 
   /**

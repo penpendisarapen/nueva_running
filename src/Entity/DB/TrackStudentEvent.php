@@ -5,21 +5,35 @@ namespace Mavericks\Entity\DB;
 
 class TrackStudentEvent
 {
+  /**
+   * @var int
+   */
   private $trackStudentEventId;
-  
-  private $trackMeetId;
-  
-  private $trackEventId;
-  
-  private $studentId;
-  
-  private $overallPlace;
-  
-  private $medaled;
 
-  public function __construct()
-  {
-  }
+  /**
+   * @var int
+   */
+  private $trackMeetId;
+
+  /**
+   * @var int
+   */
+  private $trackEventId;
+
+  /**
+   * @var int
+   */
+  private $studentId;
+
+  /**
+   * @var int
+   */
+  private $overallPlace;
+
+  /**
+   * @var bool
+   */
+  private $medaled = false;
 
   /**
    * @return mixed
@@ -117,9 +131,9 @@ class TrackStudentEvent
   }
 
   /**
-   * @return mixed
+   * @return bool
    */
-  public function medaled()
+  public function hasMedaled()
   {
     return $this->medaled;
   }
@@ -128,7 +142,7 @@ class TrackStudentEvent
    * @param $medaled
    * @return $this
    */
-  public function setMedaled($medaled)
+  public function setHasMedaled($medaled)
   {
     $this->medaled = $medaled ? true : false;
 

@@ -69,7 +69,7 @@
               {% endif %}
             </td>
           {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
-            <td class="text-nowrap text-right">{{ result.result }}</td>
+            <td class="text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
             <td class="text-center">{{ result.place }}</td>
             <td class="text-center">{{ result.overallPlace }}</td>
           </tr>
@@ -81,7 +81,10 @@
 
     {% for event in meetResults.relay %}
       <div class="page-header" style="padding-bottom: 0;">
-        <h4>{{ event.eventGender }} {{ event.eventName }}</h4>
+        <h4>
+          {{ event.eventGender }}
+          {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
+          {{ event.eventName }}</h4>
       </div>
 
       <table class="table table-striped">

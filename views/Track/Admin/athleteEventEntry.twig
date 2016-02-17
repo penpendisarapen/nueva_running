@@ -4,7 +4,7 @@
 {% block pageTitle %}Meet Results{% endblock %}
 
 {% block content %}
-  <div class="page-header pbn"><h4>Athlete Event Entry</h4></div>
+  <div class="page-header pbn"><h4>Athlete Event Result Entry</h4></div>
 
   <div>
     <h5>
@@ -20,96 +20,368 @@
     {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
   </div>
 
-  <form>
-    <fieldset>
-      <input type="hidden" name="trackMeetId" value="{{ meetId }}">
-      <input type="hidden" name="addAthleteEvent" value="1">
-      <div class="row">
-        <div class="col-md-2">
-          <div id="athlete-label">Athlete:</div>
-          <div>
-            <select name="studentId">
-              <option value="">--Select--</option>
-              {% for athlete in athletes %}
-                <option value="{{ athlete.studentId }}">{{ athlete.studentName }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div>Event:</div>
-          <div>
-            <select name="trackEventTypeId">
-              <option value="">--Select--</option>
-              {% for event in events %}
-                <option value="{{ event.trackEventTypeId }}">{{ event.eventName }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-md-1">
-          <div>Gender:</div>
-          <div>
-            <select name="eventGender">
-              <option value="">--Select--</option>
-              <option value="Boys">Boys</option>
-              <option value="Girls">Girls</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div>Type:</div>
-          <div>
-            <select name="eventSubType">
-              <option value="">None</option>
-              <option value="Varsity">Varsity</option>
-              <option value="JV">JV</option>
-              <option value="Frosh-Soph">Frosh-Soph</option>
-              <option value="Frosh">Frosh</option>
-              <option value="Soph">Soph</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-1">
-          <button type="submit" class="btn btn-sm btn-default">Submit</button>
-        </div>
-      </div>
-    </fieldset>
-  </form>
+  <!-- Button trigger individual event modal -->
+  <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#addEventModal">
+    Add Athlete Event
+  </button>
 
-  <div class="pbt">
+  <!-- Add Athlete Event Modal -->
+  <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add Athlete Event</h4>
+        </div>
+        <form name="addEvent">
+          <div class="modal-body">
+            <fieldset>
+              <input type="hidden" name="trackMeetId" value="{{ meetId }}">
+              <input type="hidden" name="formType" value="event">
+              <div class="row">
+                <div class="col-md-4 text-right">Select athlete:</div>
+                <div class="col-md-4">
+                  <select name="studentId">
+                    <option value="">--Select--</option>
+                    {% for athlete in athletes %}
+                      <option value="{{ athlete.studentId }}">{{ athlete.studentName }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Event:</div>
+                <div class="col-md-4">
+                  <select name="trackEventTypeId">
+                    <option value="">--Select--</option>
+                    {% for event in events if event.raceType == 'individual' %}
+                      <option value="{{ event.trackEventTypeId }}">{{ event.eventName }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Gender:</div>
+                <div class="col-md-4">
+                  <select name="eventGender">
+                    <option value="">--Select--</option>
+                    <option value="Boys">Boys</option>
+                    <option value="Girls">Girls</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Type:</div>
+                <div class="col-md-4">
+                  <select name="eventSubType">
+                    <option value="">None</option>
+                    <option value="Varsity">Varsity</option>
+                    <option value="JV">JV</option>
+                    <option value="Frosh-Soph">Frosh-Soph</option>
+                    <option value="Frosh">Frosh</option>
+                    <option value="Soph">Soph</option>
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#addRelayModal">
+    Add Relay Team
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addRelayModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add Relay Team</h4>
+        </div>
+        <form name="addEvent">
+          <div class="modal-body">
+            <fieldset>
+              <input type="hidden" name="trackMeetId" value="{{ meetId }}">
+              <input type="hidden" name="formType" value="relay">
+              <div class="row">
+                <div class="col-md-4 text-right">Event:</div>
+                <div class="col-md-4">
+                  <select name="trackEventTypeId">
+                    <option value="">--Select--</option>
+                    {% for event in events if event.raceType == 'relay' %}
+                      <option value="{{ event.trackEventTypeId }}">{{ event.eventName }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Gender:</div>
+                <div class="col-md-4">
+                  <select name="eventGender">
+                    <option value="">--Select--</option>
+                    <option value="Boys">Boys</option>
+                    <option value="Girls">Girls</option>
+                    <option value="Girls">Mixed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Type:</div>
+                <div class="col-md-4">
+                  <select name="eventSubType">
+                    <option value="">None</option>
+                    <option value="Varsity">Varsity</option>
+                    <option value="JV">JV</option>
+                    <option value="Frosh-Soph">Frosh-Soph</option>
+                    <option value="Frosh">Frosh</option>
+                    <option value="Soph">Soph</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Select athletes:</div>
+                <div class="col-md-4">
+                  {% for athlete in athletes %}
+                    <input type="checkbox" name="studentId[]" value="{{ athlete.studentId }}">&nbsp;&nbsp;{{ athlete.studentName }}</input><br>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 text-right">Team Name (optional):</div>
+                <div class="col-md-4">
+                  <input type="text" name="relayTeamName">
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% for event in meetResults.individual %}
+    <div class="page-header pbn">
+      <h4>
+        {{ event.eventGender }}
+        {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
+        {{ event.eventName }}
+      </h4>
+    </div>
+
     <table class="table table-striped">
       <thead>
       <tr>
-        <th>Event</th>
         <th>Athlete</th>
+        {% if event.eventType == 'race' %}<th class="text-center">Heat</th>{% endif %}
+        <th class="text-right">Result</th>
+        <th class="text-center">Place</th>
+        <th class="text-center">Overall</th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
-      {% for event in eventAthletes.individual %}
+
+      {% for result in event.results %}
         <tr>
-          <td>
-            <strong>
-            {{ event.eventGender }}
-            {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
-            {{ event.eventName }}
-            </strong>
-          </td>
           <td class="text-nowrap">
-            {% for result in event.results %}
-              {{ result.firstName }} {{ result.lastName }}<br>
-            {% endfor %}
+            {{ result.firstName }} {{ result.lastName }}
+            {% if result.medaled %}
+              {% if result.overallPlace == 1 %}
+                <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
+              {% elseif result.overallPlace == 2 %}
+                <img src="/assets/images/icons/silver_medal.png" width="20" height="20">
+              {% else %}
+                <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
+              {% endif %}
+            {% endif %}
+
+            {% if result.setSchoolRecord %}
+              <img src="/assets/images/icons/red_star.png" width="20" height="20">
+            {% endif %}
+
+            {% if result.setPersonalRecord %}
+              <img src="/assets/images/icons/blue_star.png" width="20" height="20">
+            {% endif %}
           </td>
-        </tr>
-      {% else %}
-        <tr>
-          <td colspan="2">
-            No events have been added.
+          {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
+          <td class="text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
+          <td class="text-center">{{ result.place }}</td>
+          <td class="text-center">{{ result.overallPlace }}</td>
+          <td>
+            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updateModal{{ result.trackStudentEventId }}">
+              Update Result
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="updateModal{{ result.trackStudentEventId }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                      {{ event.eventGender }}
+                      {{ event.eventName }} &mdash;
+                      {{ result.firstName }} {{ result.lastName }}
+                    </h4>
+                  </div>
+                  <form name="addEvent{{ result.trackStudentEventId }}">
+                    <div class="modal-body">
+                      <fieldset>
+                        <input type="hidden" name="trackEventId" value="{{ event.trackEventId }}">
+                        <input type="hidden" name="trackStudentEventId" value="{{ result.trackStudentEventId }}">
+                        <input type="hidden" name="formType" value="result">
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <strong>Enter result:</strong>
+                          </div>
+                          <div class="col-md-6">
+                            {% if event.eventType == 'field' %}
+                              <input type="text" name="resultFeet" id="resultFeet" value="0" size="2"> <label for="resultFeet">ft</label>
+                              <input type="text" name="resultInches" id="resultInches" value="0.00" size="4"> <label for="resultInches">in</label>
+                            {% else %}
+                              <input type="text" name="resultMinutes" id="resultMinutes" value="0" size="2"> <label for="resultMinutes">min</label>
+                              <input type="text" name="resultSeconds" id="resultSeconds" value="0.00" size="4"> <label for="resultSeconds">sec</label>
+                            {% endif %}
+                          </div>
+                        </div>
+
+                        {% if event.eventType == 'track' %}
+                          <div class="row">
+                            <div class="col-md-4 text-right">
+                              <label for="heatNumber">Heat number:</label>
+                            </div>
+                            <div class="col-md-6">
+                              <input type="text" name="heatNumber" id="heatNumber" size="2">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-4 text-right">
+                              <label for="place">Place in heat:</label>
+                            </div>
+                            <div class="col-md-6">
+                              <input type="text" name="place" id="place" size="2">
+                            </div>
+                          </div>
+                        {% endif %}
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="overallPlace">Overall place:</label>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" name="overallPlace" id="overallPlace" size="2">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="medaled">Medaled?:</label>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="checkbox" name="medaled" id="medaled">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="setSchoolRecord">Set school record?:</label>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="setPersonalRecord">Set personal record?:</label>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="checkbox" name="setPersonalRecord" id="setPersonalRecord">
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </td>
         </tr>
       {% endfor %}
+
       </tbody>
     </table>
-  </div>
+  {% endfor %}
 
+  {% for event in meetResults.relay %}
+    <div class="page-header" style="padding-bottom: 0;">
+      <h4>
+        {{ event.eventGender }}
+        {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
+        {{ event.eventName }}</h4>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Athletes</th>
+        <th class="text-right">&nbsp;</th>
+        <th class="text-right">Heat</th>
+        <th class="text-right">Result</th>
+        <th class="text-center">Place</th>
+        <th class="text-center">Overall</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {% for result in event.results %}
+        <tr>
+          <td class="text-nowrap">
+            {% for member in result.members %}
+              {{ member.firstName }} {{ member.lastName }}<br>
+            {% endfor %}
+          </td>
+          <td class="text-center">
+            {% if result.medaled %}
+              {% if result.overallPlace == 1 %}
+                <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
+              {% elseif result.overallPlace == 2 %}
+                <img src="/assets/images/icons/silver_medal.png" width="20" height="20">
+              {% else %}
+                <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
+              {% endif %}
+            {% endif %}
+
+            {% if result.setSchoolRecord %}
+              <img src="/assets/images/icons/red_star.png" width="20" height="20">
+            {% endif %}
+          </td>
+          <td class="text-center">{{ result.heatNumber }}</td>
+          <td class="text-nowrap text-right">{{ result.result }}</td>
+          <td class="text-center">{{ result.place }}</td>
+          <td class="text-center">{{ result.overallPlace }}</td>
+        </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  {% endfor %}
 {% endblock %}

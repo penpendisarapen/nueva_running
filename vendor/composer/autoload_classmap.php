@@ -21,6 +21,7 @@ return array(
     'Mavericks\\Data\\CurrentSeason' => $baseDir . '/src/Data/CurrentSeason.php',
     'Mavericks\\Entity\\DB\\Time' => $baseDir . '/src/Entity/DB/Time.php',
     'Mavericks\\Entity\\DB\\TrackEvent' => $baseDir . '/src/Entity/DB/TrackEvent.php',
+    'Mavericks\\Entity\\DB\\TrackRelayTeam' => $baseDir . '/src/Entity/DB/TrackRelayTeam.php',
     'Mavericks\\Entity\\DB\\TrackStudentEvent' => $baseDir . '/src/Entity/DB/TrackStudentEvent.php',
     'Mavericks\\Entity\\MeetType' => $baseDir . '/src/Entity/MeetType.php',
     'Mavericks\\Entity\\Result' => $baseDir . '/src/Entity/Result.php',
@@ -42,4 +43,5 @@ return array(
     'Mavericks\\Service\\Track\\MeetService' => $baseDir . '/src/Service/Track/MeetService.php',
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
     'Mavericks\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
+    'Maverics\\Entity\\DB\\TrackRelayTeamMember' => $baseDir . '/src/Entity/DB/TrackRelayTeamMember.php',
 );

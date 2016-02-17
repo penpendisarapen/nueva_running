@@ -3,8 +3,6 @@
 
 namespace Mavericks\Entity\DB;
 
-use Mavericks\Entity\DB\Time;
-
 class TrackEvent
 {
   private $trackEventId;
@@ -21,10 +19,6 @@ class TrackEvent
    * @var Time
    */
   private $eventStartTime;
-
-  public function __construct()
-  {
-  }
 
   /**
    * @return mixed

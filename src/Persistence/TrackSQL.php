@@ -737,9 +737,6 @@ class TrackSQL extends SQLPersistence
 
     $sql = 'INSERT INTO TrackRelayTeamMember (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
 
-    print "$sql\n";
-    print_r($bindParams);
-
     try
     {
       return $this->query($sql, $bindParams);

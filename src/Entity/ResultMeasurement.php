@@ -39,6 +39,14 @@ class ResultMeasurement implements Result
   }
 
   /**
+   * @return float
+   */
+  public function getResultInInches()
+  {
+    return $this->inches;
+  }
+
+  /**
    * @return string
    */
   public function __toString()

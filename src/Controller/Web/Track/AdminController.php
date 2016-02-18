@@ -5,7 +5,10 @@ namespace Mavericks\Controller\Web\Track;
 
 use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
+use Mavericks\Entity\ResultMeasurement;
+use Mavericks\Entity\ResultTime;
 use Maverics\Entity\DB\TrackRelayTeamMember;
+use NuevaRunning\Entity\DB\TrackEventResult;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Mavericks\Service\Track\MeetService;
@@ -31,13 +34,23 @@ class AdminController
   }
 
   /**
+   * @param $meetId
+   * @return mixed
+   */
+  public function getAthleteEventEntry($meetId)
+  {
+    $data = $this->getPageData($meetId);
+
+    return $this->App['twig']->render('Track/Admin/athleteEventEntry.twig', $data);
+  }
+
+  /**
    * @param Request $Request
    * @param $meetId
    * @return mixed
    */
-  public function renderAthleteEventEntry(Request $Request, $meetId)
+  public function postAthleteEventEntry(Request $Request, $meetId)
   {
-    $Season = $this->MeetService->getSeasonByMeetId($meetId);
     $message = '';
 
     if ($Request->get('formType'))
@@ -66,18 +79,37 @@ class AdminController
 
           break;
         case 'result':
+          $TrackEventResult = $this->createEventResultFromRequest($Request);
+          $this->MeetService->addEventResult($TrackEventResult);
+
+          $TrackStudentEvent = $this->createStudentEventFromRequest($Request);
+          $this->MeetService->updateStudentEvent($TrackStudentEvent);
+
           break;
       }
     }
 
-    return $this->App['twig']->render('Track/Admin/athleteEventEntry.twig', array(
-      'meetId'        => $meetId,
-      'meetDetails'   => $this->MeetService->getMeetDetails($meetId),
-      'athletes'      => $this->MeetService->getAthletesBySeason($Season),
-      'events'        => $this->MeetService->getEventTypes(),
-      'meetResults' => $this->MeetService->getMeetResults($meetId),
-      'message'       => $message
-    ));
+    $data            = $this->getPageData($meetId);
+    $data['message'] = $message;
+
+    return $this->App['twig']->render('Track/Admin/athleteEventEntry.twig', $data);
+  }
+
+  /**
+   * @param $meetId
+   * @return array
+   */
+  private function getPageData($meetId)
+  {
+    $Season = $this->MeetService->getSeasonByMeetId($meetId);
+
+    return  array(
+      'meetId'      => $meetId,
+      'meetDetails' => $this->MeetService->getMeetDetails($meetId),
+      'athletes'    => $this->MeetService->getAthletesBySeason($Season),
+      'events'      => $this->MeetService->getEventTypes(),
+      'meetResults' => $this->MeetService->getMeetResults($meetId)
+    );
   }
 
   /**
@@ -116,11 +148,26 @@ class AdminController
     $TrackStudentEvent = new TrackStudentEvent();
     $TrackStudentEvent
       ->setTrackMeetId($Request->get('trackMeetId'))
-      ->setStudentId($Request->get('studentId'));
+      ->setStudentId($Request->get('studentId'))
+      ->setHasMedaled($Request->get('medaled'));
+
+    if ($Request->get('trackStudentEventId'))
+    {
+      $TrackStudentEvent->setTrackStudentEventId($Request->get('trackStudentEventId'));
+    }
+
+    if ($Request->get('overallPlace'))
+    {
+      $TrackStudentEvent->setOverallPlace($Request->get('overallPlace'));
+    }
 
     return $TrackStudentEvent;
   }
 
+  /**
+   * @param Request $Request
+   * @return TrackRelayTeam
+   */
   private function createRelayTeamFromRequest(Request $Request)
   {
     $RelayTeam = new TrackRelayTeam();
@@ -129,6 +176,10 @@ class AdminController
     return $RelayTeam;
   }
 
+  /**
+   * @param Request $Request
+   * @return array
+   */
   private function createRelayTeamMembersFromRequest(Request $Request)
   {
     $TeamMembers = array();
@@ -141,5 +192,63 @@ class AdminController
       $TeamMembers[] = $TeamMember;
     }
     return $TeamMembers;
+  }
+
+  /**
+   * @param Request $Request
+   * @return TrackEventResult
+   */
+  private function createEventResultFromRequest(Request $Request)
+  {
+    $TrackEventResult = new TrackEventResult();
+    $TrackEventResult
+      ->setTrackStudentEventId($Request->get('trackStudentEventId'))
+      ->setHasSetSchoolRecord($Request->get('setSchoolRecord'))
+      ->setHasSetPersonalRecord($Request->get('setPersonalRecord'));
+
+    if ($Request->get('eventType') === 'track')
+    {
+      $TrackEventResult->setResultInSeconds($this->createResultTimeFromRequest($Request));
+
+      if ($Request->get('heatNumber'))
+      {
+        $TrackEventResult->setHeatNumber((int)$Request->get('heatNumber'));
+      }
+    }
+    else
+    {
+      $TrackEventResult->setResultInInches($this->createResultMeasurementFromRequest($Request));
+    }
+
+    if ($Request->get('place'))
+    {
+      $TrackEventResult->setPlace($Request->get('place'));
+    }
+
+    return $TrackEventResult;
+  }
+
+  /**
+   * @param Request $Request
+   * @return ResultTime
+   */
+  private function createResultTimeFromRequest(Request $Request)
+  {
+    $minutes = $Request->get('resultMinutes') ?: 0;
+    $seconds = $Request->get('resultSeconds') + ($minutes * 60);
+
+    return new ResultTime($seconds);
+  }
+
+  /**
+   * @param Request $Request
+   * @return ResultMeasurement
+   */
+  private function createResultMeasurementFromRequest(Request $Request)
+  {
+    $feet = $Request->get('resultFeet') ?: 0;
+    $inches = $Request->get('resultInches') + ($feet * 12);
+
+    return new ResultMeasurement($inches);
   }
 }

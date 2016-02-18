@@ -6,8 +6,11 @@ namespace Mavericks\Persistence;
 use Mavericks\Entity\DB\TrackEvent;
 use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
+use Mavericks\Entity\ResultMeasurement;
+use Mavericks\Entity\ResultTime;
 use Mavericks\Entity\Season;
 use Maverics\Entity\DB\TrackRelayTeamMember;
+use NuevaRunning\Entity\DB\TrackEventResult;
 
 class TrackSQL extends SQLPersistence
 {
@@ -674,11 +677,110 @@ class TrackSQL extends SQLPersistence
     }
   }
 
+  /**
+   * @param TrackStudentEvent $TrackStudentEvent
+   * @return int
+   */
   public function updateStudentEvent(TrackStudentEvent $TrackStudentEvent)
-  {}
+  {
+    $sql = "
+      UPDATE
+        TrackStudentEvent
+      SET
+        medaled = :medaled
+    ";
 
-  public function addStudentEventResult()
-  {}
+    $bindParams = array(
+      ':medaled'             => $TrackStudentEvent->hasMedaled() ? 1 : 0,
+      ':trackStudentEventId' => $TrackStudentEvent->getTrackStudentEventId()
+    );
+
+    if ($TrackStudentEvent->getOverallPlace())
+    {
+      $sql .= ', overallPlace = :overallPlace';
+      $bindParams[':overallPlace'] = $TrackStudentEvent->getOverallPlace();
+    }
+
+    $sql .= "
+      WHERE
+        trackStudentEventId = :trackStudentEventId
+    ";
+
+    try
+    {
+      return $this->update($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param TrackEventResult $TrackEventResult
+   * @return int|string
+   */
+  public function addEventResult(TrackEventResult $TrackEventResult)
+  {
+    $fields = array(
+      'trackStudentEventId',
+      'setSchoolRecord',
+      'setPersonalRecord'
+    );
+
+    $values = array(
+      ':trackStudentEventId',
+      ':setSchoolRecord',
+      ':setPersonalRecord'
+    );
+
+    $bindParams = array(
+      ':trackStudentEventId' => $TrackEventResult->getTrackStudentEventId(),
+      ':setSchoolRecord'     => $TrackEventResult->hasSetSchoolRecord() ? 1 : 0,
+      ':setPersonalRecord'   => $TrackEventResult->hasSetPersonalRecord() ? 1 : 0
+    );
+
+    if ($TrackEventResult->getResultInSeconds() instanceof ResultTime)
+    {
+      $fields[]                       = 'resultInSeconds';
+      $values[]                       = ':resultInSeconds';
+      $bindParams[':resultInSeconds'] = $TrackEventResult->getResultInSeconds()->getResultInSeconds();
+    }
+
+    if ($TrackEventResult->getResultInInches() instanceof ResultMeasurement)
+    {
+      $fields[]                      = 'resultInInches';
+      $values[]                      = ':resultInInches';
+      $bindParams[':resultInInches'] = $TrackEventResult->getResultInInches()->getResultInInches();
+    }
+
+    if ($TrackEventResult->getHeatNumber())
+    {
+      $fields[]                  = 'heatNumber';
+      $values[]                  = ':heatNumber';
+      $bindParams[':heatNumber'] = $TrackEventResult->getHeatNumber();
+    }
+
+    if ($TrackEventResult->getPlace())
+    {
+      $fields[]             = 'place';
+      $values[]             = ':place';
+      $bindParams[':place'] = $TrackEventResult->getPlace();
+    }
+
+    $sql = 'INSERT INTO TrackEventResult (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
 
   /**
    * @param TrackRelayTeam $TrackRelayTeam

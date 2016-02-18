@@ -10,6 +10,7 @@ use Mavericks\Persistence\TrackSQL;
 use Mavericks\Entity\ResultMeasurement;
 use Mavericks\Entity\ResultTime;
 use Maverics\Entity\DB\TrackRelayTeamMember;
+use NuevaRunning\Entity\DB\TrackEventResult;
 
 
 class MeetService
@@ -139,6 +140,24 @@ class MeetService
     }
 
     return $this->TrackSQL->addStudentEvent($TrackStudentEvent);
+  }
+
+  /**
+   * @param TrackStudentEvent $TrackStudentEvent
+   * @return int
+   */
+  public function updateStudentEvent(TrackStudentEvent $TrackStudentEvent)
+  {
+    return $this->TrackSQL->updateStudentEvent($TrackStudentEvent);
+  }
+
+  /**
+   * @param TrackEventResult $TrackEventResult
+   * @return int|string
+   */
+  public function addEventResult(TrackEventResult $TrackEventResult)
+  {
+    return $this->TrackSQL->addEventResult($TrackEventResult);
   }
 
   /**

@@ -33,7 +33,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Add Athlete Event</h4>
         </div>
-        <form name="addEvent">
+        <form name="addEvent" method="post">
           <div class="modal-body">
             <fieldset>
               <input type="hidden" name="trackMeetId" value="{{ meetId }}">
@@ -107,7 +107,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Add Relay Team</h4>
         </div>
-        <form name="addEvent">
+        <form name="addEvent" method="post">
           <div class="modal-body">
             <fieldset>
               <input type="hidden" name="trackMeetId" value="{{ meetId }}">
@@ -172,6 +172,12 @@
     </div>
   </div>
 
+  <div class="ptl">
+    <div class="pvs"><img src="/assets/images/icons/gold_medal.png" width="25" height="25"> - Won medal</div>
+    <div class="pvs"><img src="/assets/images/icons/red_star.png" width="25" height="25"> - Set school record</div>
+    <div class="pvs"><img src="/assets/images/icons/blue_star.png" width="25" height="25"> - Set personal record</div>
+  </div>
+
   {% for event in meetResults.individual %}
     <div class="page-header pbn">
       <h4>
@@ -226,7 +232,7 @@
             </button>
 
             <!-- Modal -->
-            <div class="modal fade" id="updateModal{{ result.trackStudentEventId }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade text-left" id="updateModal{{ result.trackStudentEventId }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -237,11 +243,12 @@
                       {{ result.firstName }} {{ result.lastName }}
                     </h4>
                   </div>
-                  <form name="addEvent{{ result.trackStudentEventId }}">
+                  <form name="addEvent{{ result.trackStudentEventId }}" method="post">
                     <div class="modal-body">
                       <fieldset>
                         <input type="hidden" name="trackEventId" value="{{ event.trackEventId }}">
                         <input type="hidden" name="trackStudentEventId" value="{{ result.trackStudentEventId }}">
+                        <input type="hidden" name="eventType" value="{{ event.eventType }}">
                         <input type="hidden" name="formType" value="result">
                         <div class="row">
                           <div class="col-md-4 text-right">
@@ -292,7 +299,7 @@
                             <label for="medaled">Medaled?:</label>
                           </div>
                           <div class="col-md-6 text-left">
-                            <input type="checkbox" name="medaled" id="medaled">
+                            <input type="checkbox" name="medaled" id="medaled" value="1">
                           </div>
                         </div>
 
@@ -301,7 +308,7 @@
                             <label for="setSchoolRecord">Set school record?:</label>
                           </div>
                           <div class="col-md-6 text-left">
-                            <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord">
+                            <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord" value="1">
                           </div>
                         </div>
 
@@ -310,7 +317,7 @@
                             <label for="setPersonalRecord">Set personal record?:</label>
                           </div>
                           <div class="col-md-6 text-left">
-                            <input type="checkbox" name="setPersonalRecord" id="setPersonalRecord">
+                            <input type="checkbox" name="setPersonalRecord" id="setPersonalRecord" value="1">
                           </div>
                         </div>
                       </fieldset>
@@ -332,7 +339,7 @@
   {% endfor %}
 
   {% for event in meetResults.relay %}
-    <div class="page-header" style="padding-bottom: 0;">
+    <div class="page-header pbn">
       <h4>
         {{ event.eventGender }}
         {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}

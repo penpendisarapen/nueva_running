@@ -58,6 +58,14 @@ class ResultTime implements Result
   }
 
   /**
+   * @return float
+   */
+  public function getResultInSeconds()
+  {
+    return $this->seconds;
+  }
+
+  /**
    * @return string
    */
   public function __toString()

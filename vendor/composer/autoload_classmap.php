@@ -44,4 +44,5 @@ return array(
     'Mavericks\\Service\\Track\\RecordsService' => $baseDir . '/src/Service/Track/RecordsService.php',
     'Mavericks\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
     'Maverics\\Entity\\DB\\TrackRelayTeamMember' => $baseDir . '/src/Entity/DB/TrackRelayTeamMember.php',
+    'NuevaRunning\\Entity\\DB\\TrackEventResult' => $baseDir . '/src/Entity/DB/TrackEventResult.php',
 );

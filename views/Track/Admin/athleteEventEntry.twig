@@ -39,7 +39,7 @@
               <input type="hidden" name="trackMeetId" value="{{ meetId }}">
               <input type="hidden" name="formType" value="event">
               <div class="row">
-                <div class="col-md-4 text-right">Select athlete:</div>
+                <div class="col-md-4">Select athlete:</div>
                 <div class="col-md-4">
                   <select name="studentId">
                     <option value="">--Select--</option>
@@ -50,7 +50,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Event:</div>
+                <div class="col-md-4">Event:</div>
                 <div class="col-md-4">
                   <select name="trackEventTypeId">
                     <option value="">--Select--</option>
@@ -61,7 +61,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Gender:</div>
+                <div class="col-md-4">Gender:</div>
                 <div class="col-md-4">
                   <select name="eventGender">
                     <option value="">--Select--</option>
@@ -71,7 +71,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Type:</div>
+                <div class="col-md-4">Type:</div>
                 <div class="col-md-4">
                   <select name="eventSubType">
                     <option value="">None</option>
@@ -114,7 +114,7 @@
               <input type="hidden" name="trackMeetId" value="{{ meetId }}">
               <input type="hidden" name="formType" value="relay">
               <div class="row">
-                <div class="col-md-4 text-right">Event:</div>
+                <div class="col-md-4">Event:</div>
                 <div class="col-md-4">
                   <select name="trackEventTypeId">
                     <option value="">--Select--</option>
@@ -125,7 +125,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Gender:</div>
+                <div class="col-md-4">Gender:</div>
                 <div class="col-md-4">
                   <select name="eventGender">
                     <option value="">--Select--</option>
@@ -136,7 +136,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Type:</div>
+                <div class="col-md-4">Type:</div>
                 <div class="col-md-4">
                   <select name="eventSubType">
                     <option value="">None</option>
@@ -149,7 +149,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Select athletes:</div>
+                <div class="col-md-4">Select athletes:</div>
                 <div class="col-md-4">
                   {% for athlete in athletes %}
                     <input type="checkbox" name="studentId[]" value="{{ athlete.studentId }}">&nbsp;&nbsp;{{ athlete.studentName }}</input><br>
@@ -157,7 +157,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 text-right">Team Name (optional):</div>
+                <div class="col-md-4">Team Name (optional):</div>
                 <div class="col-md-4">
                   <input type="text" name="relayTeamName">
                 </div>
@@ -252,7 +252,7 @@
                         <input type="hidden" name="eventType" value="{{ event.eventType }}">
                         <input type="hidden" name="formType" value="result">
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <strong>Enter result:</strong>
                           </div>
                           <div class="col-md-6 text-left">
@@ -268,7 +268,7 @@
 
                         {% if event.eventType == 'track' %}
                           <div class="row">
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-4">
                               <label for="heatNumber">Heat number:</label>
                             </div>
                             <div class="col-md-6 text-left">
@@ -277,7 +277,7 @@
                           </div>
 
                           <div class="row">
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-4">
                               <label for="place">Place in heat:</label>
                             </div>
                             <div class="col-md-6 text-left">
@@ -287,7 +287,7 @@
                         {% endif %}
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="overallPlace">Overall place:</label>
                           </div>
                           <div class="col-md-6 text-left">
@@ -296,7 +296,7 @@
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="medaled">Medaled?:</label>
                           </div>
                           <div class="col-md-6 text-left">
@@ -305,7 +305,7 @@
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="setSchoolRecord">Set school record?:</label>
                           </div>
                           <div class="col-md-6 text-left">
@@ -314,7 +314,7 @@
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="setPersonalRecord">Set personal record?:</label>
                           </div>
                           <div class="col-md-6 text-left">
@@ -419,56 +419,56 @@
                         <input type="hidden" name="trackRelayTeamId" value="{{ result.trackRelayTeamId }}">
                         <input type="hidden" name="formType" value="relayResult">
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <strong>Enter result:</strong>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="text" name="resultMinutes" id="resultMinutes" value="0" size="2"> <label for="resultMinutes">min</label>
                             <input type="text" name="resultSeconds" id="resultSeconds" value="0.00" size="4"> <label for="resultSeconds">sec</label>
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="heatNumber">Heat number:</label>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="text" name="heatNumber" id="heatNumber" size="2">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="place">Place in heat:</label>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="text" name="place" id="place" size="2">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="overallPlace">Overall place:</label>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="text" name="overallPlace" id="overallPlace" size="2">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="medaled">Medaled?:</label>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="checkbox" name="medaled" id="medaled" value="1">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-md-4 text-right">
+                          <div class="col-md-4">
                             <label for="setSchoolRecord">Set school record?:</label>
                           </div>
-                          <div class="col-md-6 text-left">
+                          <div class="col-md-6">
                             <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord" value="1">
                           </div>
                         </div>

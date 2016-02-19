@@ -80,6 +80,7 @@
                     <option value="Frosh-Soph">Frosh-Soph</option>
                     <option value="Frosh">Frosh</option>
                     <option value="Soph">Soph</option>
+                    <option value="Frosh-Soph (Invitational)">Frosh-Soph (Invitational)</option>
                   </select>
                 </div>
               </div>
@@ -330,6 +331,7 @@
                 </div>
               </div>
             </div>
+
           </td>
         </tr>
       {% endfor %}
@@ -343,7 +345,8 @@
       <h4>
         {{ event.eventGender }}
         {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
-        {{ event.eventName }}</h4>
+        {{ event.eventName }}
+      </h4>
     </div>
 
     <table class="table table-striped">
@@ -355,6 +358,7 @@
         <th class="text-right">Result</th>
         <th class="text-center">Place</th>
         <th class="text-center">Overall</th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -385,6 +389,101 @@
           <td class="text-nowrap text-right">{{ result.result }}</td>
           <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>
+          <td>
+
+            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updateModal{{ result.trackRelayTeamId }}">
+              Update Result
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade text-left" id="updateModal{{ result.trackRelayTeamId }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                      {{ event.eventGender }}
+                      {{ event.eventName }}
+                    </h4>
+
+                    <div class="ptm">
+                      {% for member in result.members %}
+                        {{ member.firstName }} {{ member.lastName }}<br>
+                      {% endfor %}
+                    </div>
+
+                  </div>
+                  <form name="addEvent{{ result.trackRelayTeamId }}" method="post">
+                    <div class="modal-body">
+                      <fieldset>
+                        <input type="hidden" name="trackRelayTeamId" value="{{ result.trackRelayTeamId }}">
+                        <input type="hidden" name="formType" value="relayResult">
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <strong>Enter result:</strong>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="text" name="resultMinutes" id="resultMinutes" value="0" size="2"> <label for="resultMinutes">min</label>
+                            <input type="text" name="resultSeconds" id="resultSeconds" value="0.00" size="4"> <label for="resultSeconds">sec</label>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="heatNumber">Heat number:</label>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="text" name="heatNumber" id="heatNumber" size="2">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="place">Place in heat:</label>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="text" name="place" id="place" size="2">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="overallPlace">Overall place:</label>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="text" name="overallPlace" id="overallPlace" size="2">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="medaled">Medaled?:</label>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="checkbox" name="medaled" id="medaled" value="1">
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-4 text-right">
+                            <label for="setSchoolRecord">Set school record?:</label>
+                          </div>
+                          <div class="col-md-6 text-left">
+                            <input type="checkbox" name="setSchoolRecord" id="setSchoolRecord" value="1">
+                          </div>
+                        </div>
+
+                      </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </td>
         </tr>
       {% endfor %}
 

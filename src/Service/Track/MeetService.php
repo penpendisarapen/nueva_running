@@ -220,6 +220,15 @@ class MeetService
   }
 
   /**
+   * @param TrackRelayTeam $TrackRelayTeam
+   * @return int
+   */
+  public function updateRelayTeamResult(TrackRelayTeam $TrackRelayTeam)
+  {
+    return $this->TrackSQL->updateRelayTeamResults($TrackRelayTeam);
+  }
+
+  /**
    * @param $eventId
    * @param $eventType
    * @param $raceType

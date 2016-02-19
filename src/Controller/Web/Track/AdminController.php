@@ -86,6 +86,11 @@ class AdminController
           $this->MeetService->updateStudentEvent($TrackStudentEvent);
 
           break;
+        case 'relayResult':
+          $TrackRelayTeam = $this->createRelayTeamFromRequest($Request);
+          $this->MeetService->updateRelayTeamResult($TrackRelayTeam);
+
+          break;
       }
     }
 
@@ -171,7 +176,37 @@ class AdminController
   private function createRelayTeamFromRequest(Request $Request)
   {
     $RelayTeam = new TrackRelayTeam();
-    $RelayTeam->setRelayTeamName($Request->get('relayTeamName'));
+    $RelayTeam
+      ->setRelayTeamName($Request->get('relayTeamName'))
+      ->setHasSetSchoolRecord($Request->get('setSchoolRecord'))
+      ->setHasMedaled($Request->get('medaled'));
+
+    if ($Request->get('trackRelayTeamId'))
+    {
+      $RelayTeam->setTrackRelayTeamId($Request->get('trackRelayTeamId'));
+    }
+
+    $Result = $this->createResultTimeFromRequest($Request);
+
+    if ($Result)
+    {
+      $RelayTeam->setResult($Result);
+    }
+
+    if ($Request->get('overallPlace'))
+    {
+      $RelayTeam->setOverallPlace($Request->get('overallPlace'));
+    }
+
+    if ($Request->get('place'))
+    {
+      $RelayTeam->setPlace($Request->get('place'));
+    }
+
+    if ($Request->get('heatNumber'))
+    {
+      $RelayTeam->setHeatNumber((int)$Request->get('heatNumber'));
+    }
 
     return $RelayTeam;
   }
@@ -230,10 +265,15 @@ class AdminController
 
   /**
    * @param Request $Request
-   * @return ResultTime
+   * @return ResultTime|null
    */
   private function createResultTimeFromRequest(Request $Request)
   {
+    if (!$Request->get('resultMinutes') && !$Request->get('resultSeconds'))
+    {
+      return null;
+    }
+
     $minutes = $Request->get('resultMinutes') ?: 0;
     $seconds = $Request->get('resultSeconds') + ($minutes * 60);
 
@@ -242,11 +282,16 @@ class AdminController
 
   /**
    * @param Request $Request
-   * @return ResultMeasurement
+   * @return ResultMeasurement|null
    */
   private function createResultMeasurementFromRequest(Request $Request)
   {
-    $feet = $Request->get('resultFeet') ?: 0;
+    if (!$Request->get('resultFeet') && !$Request->get('resultInches'))
+    {
+      return null;
+    }
+
+    $feet   = $Request->get('resultFeet') ?: 0;
     $inches = $Request->get('resultInches') + ($feet * 12);
 
     return new ResultMeasurement($inches);

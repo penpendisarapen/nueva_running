@@ -817,6 +817,80 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @param TrackRelayTeam $TrackRelayTeam
+   * @return int
+   */
+  public function updateRelayTeamResults(TrackRelayTeam $TrackRelayTeam)
+  {
+    $sql = "
+      UPDATE
+        TrackRelayTeam
+      SET
+    ";
+
+    $bindParams = array(
+      ':trackRelayTeamId' => $TrackRelayTeam->getTrackRelayTeamId()
+    );
+
+    if ($TrackRelayTeam->getResult() instanceof ResultTime)
+    {
+      $fields[]              = 'result = :result';
+      $bindParams[':result'] = $TrackRelayTeam->getResult()->getResultInSeconds();
+    }
+
+    if ($TrackRelayTeam->getPlace())
+    {
+      $fields[]             = 'place = :place';
+      $bindParams[':place'] = $TrackRelayTeam->getPlace();
+    }
+
+    if ($TrackRelayTeam->hasMedaled())
+    {
+      $fields[]               = 'medaled = :medaled';
+      $bindParams[':medaled'] = $TrackRelayTeam->hasMedaled() ? 1 : 0;
+    }
+
+    if ($TrackRelayTeam->getHeatNumber())
+    {
+      $fields[]                  = 'heatNumber = :heatNumber';
+      $bindParams[':heatNumber'] = $TrackRelayTeam->getHeatNumber();
+    }
+
+    if ($TrackRelayTeam->getOverallPlace())
+    {
+      $fields[]                    = 'overallPlace = :overallPlace';
+      $bindParams[':overallPlace'] = $TrackRelayTeam->getOverallPlace();
+    }
+
+    if ($TrackRelayTeam->hasSetSchoolRecord())
+    {
+      $fields[]                       = 'setSchoolRecord = :setSchoolRecord';
+      $bindParams[':setSchoolRecord'] = $TrackRelayTeam->hasSetSchoolRecord() ? 1 : 0;
+    }
+
+    if (empty($fields))
+    {
+      return 0;
+    }
+
+    $sql .= implode(', ', $fields);
+    $sql .= "
+      WHERE
+        trackRelayTeamId = :trackRelayTeamId
+    ";
+
+    try
+    {
+      return $this->update($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
    * @param TrackRelayTeamMember $TeamMember
    * @return int|\PDOStatement
    */

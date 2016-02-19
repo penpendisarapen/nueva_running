@@ -3,6 +3,8 @@
 namespace Mavericks\Entity\DB;
 
 
+use Mavericks\Entity\ResultTime;
+
 class TrackRelayTeam
 {
   /**
@@ -21,7 +23,7 @@ class TrackRelayTeam
   private $relayTeamName;
 
   /**
-   * @var float
+   * @var ResultTime
    */
   private $result;
 
@@ -106,7 +108,7 @@ class TrackRelayTeam
   }
 
   /**
-   * @return float
+   * @return ResultTime
    */
   public function getResult()
   {
@@ -114,10 +116,10 @@ class TrackRelayTeam
   }
 
   /**
-   * @param float $result
+   * @param ResultTime $result
    * @return TrackRelayTeam
    */
-  public function setResult($result)
+  public function setResult(ResultTime $result)
   {
     $this->result = $result;
     return $this;
@@ -144,7 +146,7 @@ class TrackRelayTeam
   /**
    * @return bool
    */
-  public function medaled()
+  public function hasMedaled()
   {
     return $this->medaled;
   }
@@ -153,9 +155,9 @@ class TrackRelayTeam
    * @param bool $medaled
    * @return TrackRelayTeam
    */
-  public function setMedaled($medaled)
+  public function setHasMedaled($medaled)
   {
-    $this->medaled = $medaled;
+    $this->medaled = $medaled ? true : false;
     return $this;
   }
 
@@ -209,7 +211,7 @@ class TrackRelayTeam
    */
   public function setHasSetSchoolRecord($setSchoolRecord)
   {
-    $this->setSchoolRecord = $setSchoolRecord;
+    $this->setSchoolRecord = $setSchoolRecord ? true : false;
     return $this;
   }
 

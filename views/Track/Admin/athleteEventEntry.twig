@@ -192,7 +192,7 @@
       <thead>
       <tr>
         <th>Athlete</th>
-        {% if event.eventType == 'race' %}<th class="text-center">Heat</th>{% endif %}
+        {% if event.eventType == 'track' %}<th class="text-center">Heat</th>{% endif %}
         <th class="text-right">Result</th>
         <th class="text-center">Place</th>
         <th class="text-center">Overall</th>
@@ -223,7 +223,7 @@
               <img src="/assets/images/icons/blue_star.png" width="20" height="20">
             {% endif %}
           </td>
-          {% if event.eventType == 'race' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
+          {% if event.eventType == 'track' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
           <td class="text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
           <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>

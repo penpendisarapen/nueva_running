@@ -17,8 +17,8 @@
     {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
   </div>
 
-  {% if meetResults is empty %}
-    <div>Results have not been posted for the meet.</div>
+  {% if meetResults.individual is empty and meetResults.relay is empty %}
+    <div>No information has been posted for the meet.</div>
   {% else %}
 
     <div style="padding: 5px 0;"><img src="/assets/images/icons/gold_medal.png" width="25" height="25"> - Won medal</div>

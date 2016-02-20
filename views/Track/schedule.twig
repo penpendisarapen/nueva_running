@@ -14,55 +14,63 @@
     <button type="submit" class="btn btn-xs btn-info">Go</button>
   </form>
 
-  <table class="table table-striped small">
-    <thead>
-    <tr>
-      <th>Meet</th>
-      <th>Date</th>
-      <th>Attendance</th>
-      <th>Results</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for meet in meetSchedule %}
-      <tr>
-        <td>
-          <div>
-            <strong>
-              {{ meet.meetName }} {{ meet.meetSubName }}
-            </strong>
-          </div>
-          <div>
-            {{ meet.locName }}&nbsp;&nbsp;
-            (<a href="#" data-toggle="collapse" data-target="#address{{ meet.trackMeetId }}">address</a>)
-            <div id="address{{ meet.trackMeetId }}" class="collapse">
-              <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}"
-                 target="_blank">
-                {{ meet.locStreet1 }}<br>
-                {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
-                {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
+  <div class="page-header pbn">
+    <h2>{{ selectedSeason }} Track Schedule</h2>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <table class="table table-striped small">
+        <thead>
+        <tr>
+          <th>Meet</th>
+          <th>Date</th>
+          <th>Attendance</th>
+          <th>Results</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for meet in meetSchedule %}
+          <tr>
+            <td>
+              <div>
+                <strong>
+                  {{ meet.meetName }} {{ meet.meetSubName }}
+                </strong>
+              </div>
+              <div>
+                {{ meet.locName }}&nbsp;&nbsp;
+                (<a href="#" data-toggle="collapse" data-target="#address{{ meet.trackMeetId }}">address</a>)
+                <div id="address{{ meet.trackMeetId }}" class="collapse">
+                  <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}"
+                     target="_blank">
+                    {{ meet.locStreet1 }}<br>
+                    {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
+                    {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td class="text-nowrap">
+              {{ meet.meetDate }}<br>
+              {{ meet.meetTime }}
+            </td>
+            <td>
+              {{ meet.teamRequired }}<br>
+              {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}
+            </td>
+            <td style="vertical-align:middle;">
+              <a href="/track/meet/results/{{ meet.trackMeetId }}">
+                <button type="button" class="btn btn-xs btn-info">View</button>
               </a>
-            </div>
-          </div>
-        </td>
-        <td class="text-nowrap">
-          {{ meet.meetDate }}<br>
-          {{ meet.meetTime }}
-        </td>
-        <td>
-          {{ meet.teamRequired }}<br>
-          {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}
-        </td>
-        <td style="vertical-align:middle;">
-          <a href="/track/meet/results/{{ meet.trackMeetId }}">
-            <button type="button" class="btn btn-xs btn-info">View</button>
-          </a>
-        </td>
-      </tr>
-    {% else %}
-      <td>No meets have been scheduled.</td>
-    {% endfor %}
-    </tbody>
-  </table>
+            </td>
+          </tr>
+        {% else %}
+          <td>No meets have been scheduled.</td>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock %}
 

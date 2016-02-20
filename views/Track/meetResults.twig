@@ -25,6 +25,8 @@
     <div style="padding: 5px 0;"><img src="/assets/images/icons/red_star.png" width="25" height="25"> - Set school record</div>
     <div style="padding: 5px 0;"><img src="/assets/images/icons/blue_star.png" width="25" height="25"> - Set personal record</div>
 
+<div class="row">
+  <div class="col-md-6">
     {% for event in meetResults.individual %}
       <div class="page-header pbn">
         <h4>
@@ -38,9 +40,11 @@
         <thead>
           <tr>
             <th>Athlete</th>
-            {% if event.eventType == 'track' %}<th class="text-center">Heat</th>{% endif %}
+            {% if event.eventType == 'track' %}
+              <th class="text-center">Heat</th>
+              <th class="text-center">Place</th>
+            {% endif %}
             <th class="text-right">Result</th>
-            <th class="text-center">Place</th>
             <th class="text-center">Overall</th>
           </tr>
         </thead>
@@ -48,7 +52,7 @@
 
         {% for result in event.results %}
           <tr>
-            <td class="text-nowrap">
+            <td class="col-md-6 text-nowrap">
               {{ result.firstName }} {{ result.lastName }}
               {% if result.medaled %}
                 {% if result.overallPlace == 1 %}
@@ -68,10 +72,12 @@
                 <img src="/assets/images/icons/blue_star.png" width="20" height="20">
               {% endif %}
             </td>
-          {% if event.eventType == 'track' %}<td class="text-center">{{ result.heatNumber }}</td>{% endif %}
-            <td class="text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
-            <td class="text-center">{{ result.place }}</td>
-            <td class="text-center">{{ result.overallPlace }}</td>
+            {% if event.eventType == 'track' %}
+              <td class="col-md-2 text-center">{{ result.heatNumber }}</td>
+              <td class="col-md-2 text-center">{{ result.place }}</td>
+            {% endif %}
+            <td class="col-md-3 text-nowrap text-right">{{ result.result ?: 'n/a' }}</td>
+            <td class="col-md-2 text-center">{{ result.overallPlace }}</td>
           </tr>
         {% endfor %}
 
@@ -94,7 +100,6 @@
         <th class="text-right">&nbsp;</th>
         <th class="text-right">Heat</th>
         <th class="text-right">Result</th>
-        <th class="text-center">Place</th>
         <th class="text-center">Overall</th>
       </tr>
       </thead>
@@ -117,14 +122,12 @@
                 <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
               {% endif %}
             {% endif %}
-
             {% if result.setSchoolRecord %}
               <img src="/assets/images/icons/red_star.png" width="20" height="20">
             {% endif %}
           </td>
           <td class="text-center">{{ result.heatNumber }}</td>
           <td class="text-nowrap text-right">{{ result.result }}</td>
-          <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>
         </tr>
       {% endfor %}
@@ -132,6 +135,8 @@
       </tbody>
       </table>
     {% endfor %}
+    </div>
+  </div>
   {% endif %}
 
 {% endblock %}

@@ -14,7 +14,9 @@
     <button type="submit" class="btn btn-xs btn-info">Go</button>
   </form>
 
-  <h1>{{ selectedSeason }} Mavericks</h1>
+  <div class="page-header pbn">
+    <h2>{{ selectedSeason }} Mavericks</h2>
+  </div>
 
   {% if athletes is empty %}
     <div>
@@ -22,53 +24,62 @@
     </div>
   {% endif %}
 
-  <div class="page-header pbn">
-    <h3>Girls</h3>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="page-header pbn">
+        <h3>Girls</h3>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Athlete</th>
+          <th class="text-center">Grade</th>
+          <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for athlete in athletes if athlete.gender == 'F' %}
+          <tr>
+            <td>{{ athlete.studentName }}</td>
+            <td class="text-center">{{ athlete.grade }}th</td>
+            <td class="text-right">
+              <button type="button" class="btn btn-xs btn-primary">View History</button>
+            </td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
   </div>
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>Athlete</th>
-      <th class="text-center">Grade</th>
-      <th>&nbsp;</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for athlete in athletes if athlete.gender == 'F' %}
-      <tr>
-        <td>{{ athlete.studentName }}</td>
-        <td class="text-center">{{ athlete.grade }}th</td>
-        <td>
-          <button type="button" class="btn btn-xs btn-primary">View History</button>
-        </td>
-      </tr>
-    {% endfor %}
 
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col-md-5">
+      <div class="page-header pbn">
+        <h3>Boys</h3>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Athlete</th>
+          <th class="text-center">Grade</th>
+          <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for athlete in athletes if athlete.gender == 'M' %}
+          <tr>
+            <td>{{ athlete.studentName }}</td>
+            <td class="text-center">{{ athlete.grade }}th</td>
+            <td class="text-right">
+              <button type="button" class="btn btn-xs btn-primary">View History</button>
+            </td>
+          </tr>
+        {% endfor %}
 
-  <div class="page-header pbn">
-    <h3>Boys</h3>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <table class="table table-striped">
-  <thead>
-  <tr>
-    <th>Athlete</th>
-    <th class="text-center">Grade</th>
-    <th>&nbsp;</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for athlete in athletes if athlete.gender == 'M' %}
-    <tr>
-      <td>{{ athlete.studentName }}</td>
-      <td class="text-center">{{ athlete.grade }}th</td>
-      <td>
-        <button type="button" class="btn btn-xs btn-primary">View History</button>
-      </td>
-    </tr>
-  {% endfor %}
 
-  </tbody>
-  </table>
 {% endblock %}

@@ -14,7 +14,6 @@ use NuevaRunning\Entity\DB\TrackEventResult;
 
 class TrackSQL extends SQLPersistence
 {
-
   /**
    * @param int $limit
    * @param int $offset
@@ -38,14 +37,14 @@ class TrackSQL extends SQLPersistence
       LIMIT $offset, $limit
     ";
 
-    $bind_params = array(
+    $bindParams = array(
       ':seasonStart' => $this->CurrentSeason->getStartDate(),
       ':seasonEnd'   => $this->CurrentSeason->getEndDate()
     );
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -100,13 +99,13 @@ class TrackSQL extends SQLPersistence
         M.meetDate
     ";
 
-    $bind_params = array(
+    $bindParams = array(
       ':season' => $Season
     );
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -127,7 +126,9 @@ class TrackSQL extends SQLPersistence
       SELECT
         S.studentId,
         S.firstName,
-        S.lastName
+        S.lastName,
+        S.gender,
+        TSS.grade
       FROM
         TrackStudentSeason TSS
       JOIN
@@ -139,11 +140,11 @@ class TrackSQL extends SQLPersistence
         S.lastName
     ";
 
-    $bind_params = array(':season' => $Season);
+    $bindParams = array(':season' => $Season);
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -167,11 +168,11 @@ class TrackSQL extends SQLPersistence
         trackMeetId = :meetId
     ";
 
-    $bind_params = array(':meetId' => $meetId);
+    $bindParams = array(':meetId' => $meetId);
 
     try
     {
-      $results = $this->fetch($sql, $bind_params);
+      $results = $this->fetch($sql, $bindParams);
 
       if (empty($results))
       {
@@ -212,11 +213,11 @@ class TrackSQL extends SQLPersistence
         M.trackMeetId = :meetId
     ";
 
-    $bind_params = array(':meetId' => $meetId);
+    $bindParams = array(':meetId' => $meetId);
 
     try
     {
-      $results = $this->fetch($sql, $bind_params);
+      $results = $this->fetch($sql, $bindParams);
 
       if (empty($results))
       {
@@ -260,11 +261,11 @@ class TrackSQL extends SQLPersistence
         T.distance
     ";
 
-    $bind_params = array(':meetId' => $meetId);
+    $bindParams = array(':meetId' => $meetId);
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -307,11 +308,11 @@ class TrackSQL extends SQLPersistence
         R.resultInInches DESC
     ";
 
-    $bind_params = array(':eventId' => $eventId);
+    $bindParams = array(':eventId' => $eventId);
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -342,11 +343,11 @@ class TrackSQL extends SQLPersistence
         trackEventId = :eventId
     ";
 
-    $bind_params = array(':eventId' => $eventId);
+    $bindParams = array(':eventId' => $eventId);
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -376,11 +377,11 @@ class TrackSQL extends SQLPersistence
         trackRelayTeamId = :teamId;
     ";
 
-    $bind_params = array(':teamId' => $teamId);
+    $bindParams = array(':teamId' => $teamId);
 
     try
     {
-      return $this->fetch($sql, $bind_params);
+      return $this->fetch($sql, $bindParams);
     }
     catch (\PDOException $e)
     {
@@ -440,14 +441,14 @@ class TrackSQL extends SQLPersistence
       LIMIT 1;
     ";
 
-    $bind_params = array(
+    $bindParams = array(
       ':gender'      => $gender,
       ':eventTypeId' => $eventTypeId
     );
 
     try
     {
-      $results = $this->fetch($sql, $bind_params);
+      $results = $this->fetch($sql, $bindParams);
 
       if (empty($results))
       {

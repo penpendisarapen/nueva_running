@@ -4,6 +4,7 @@
 namespace Mavericks\Controller\Web\Track;
 
 
+use Mavericks\Data\CurrentSeason;
 use Mavericks\Entity\Season;
 use Mavericks\Service\Track\MeetService;
 use Silex\Application;
@@ -70,9 +71,24 @@ class MeetController
   /**
    * @return mixed
    */
-  public function renderAthletes()
+  public function renderAthletes(Request $Request)
   {
-    return $this->App['twig']->render('Track/athletes.twig', array());
+    $year = $Request->get('season');
+
+    if (!$year)
+    {
+      $CurrentSeason = new CurrentSeason();
+      $year          = $CurrentSeason->getEndYear();
+    }
+
+    $Season = new Season($year);
+
+    return $this->App['twig']->render('Track/athletes.twig', array(
+      'selectedSeason' => $year,
+      'firstSeason'    => $this->MeetService->getFirstSeasonYear(),
+      'currentSeason'  => $this->App['service.currentSeason']->getEndYear(),
+      'athletes'       => $this->MeetService->getAthletesBySeason($Season)
+    ));
   }
 
   /**

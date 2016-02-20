@@ -42,6 +42,15 @@ class MeetService
   }
 
   /**
+   * @param Season $Season
+   * @return array
+   */
+  public function xgetAthletesBySeason(Season $Season)
+  {
+    return $this->TrackSQL->getAthletesBySeason($Season);
+  }
+
+  /**
    * @return array
    */
   public function getCurrentSeasonSchedule()
@@ -77,15 +86,12 @@ class MeetService
     $data     = $this->TrackSQL->getStudentsBySeason($Season);
     $athletes = array();
 
-    foreach ($data as $student)
+    foreach ($data as &$student)
     {
-      $athletes[] = array(
-        'studentId'   => $student['studentId'],
-        'studentName' => $student['firstName'] . ' ' . $student['lastName']
-      );
+      $student['studentName'] = $student['firstName'] . ' ' . $student['lastName'];
     }
 
-    return $athletes;
+    return $data;
   }
 
   /**

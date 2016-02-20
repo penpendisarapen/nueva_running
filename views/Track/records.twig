@@ -4,6 +4,71 @@
 {% block pageTitle %}Records{% endblock %}
 
 {% block content %}
-  <h1>Coming Soon!</h1>
-  <iframe src="//giphy.com/embed/gBxfttlhk7NaE?html5=true" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+  <div class="page-header pbn">
+    <h2>Nueva Mavericks Track &amp; Field Records</h2>
+  </div>
+
+  {% for event in eventRecords if event.raceType == 'individual' %}
+    <div class="page-header pbn">
+      <h3>{{ event.eventGender }} {{ event.eventName }}</h3>
+    </div>
+
+    <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Athlete</th>
+      <th>Record</th>
+      <th>Date</th>
+      <th>Meet</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in event.records %}
+      <tr>
+        <td>{{ record.firstName }} {{ record.lastName }}</td>
+        <td>{{ record.result }}</td>
+        <td>{{ record.meetDate }}</td>
+        <td>{{ record.meetName }} {{ record.meetSubName }}</td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+    </table>
+
+  {% endfor %}
+
+
+  {% for event in eventRecords if event.raceType == 'relay' %}
+    <div class="page-header pbn">
+      <h3>{{ event.eventGender }} {{ event.eventName }}</h3>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Athletes</th>
+        <th>Record</th>
+        <th>Date</th>
+        <th>Meet</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for record in event.records %}
+        <tr>
+          <td>
+            {% for athlete in record.members %}
+              {{ athlete.firstName }} {{ athlete.lastName }}<br>
+            {% endfor %}
+          </td>
+          <td>{{ record.result }}</td>
+          <td>{{ record.meetDate }}</td>
+          <td>{{ record.meetName }} {{ record.meetSubName }}</td>
+        </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+
+  {% endfor %}
+
 {% endblock %}

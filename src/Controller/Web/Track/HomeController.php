@@ -34,4 +34,5 @@ class HomeController
       'announcements' => $this->TrackService->getLatestAnnouncements()
     ));
   }
+
 }

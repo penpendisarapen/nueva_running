@@ -417,28 +417,76 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @return array
+   */
+  public function getEventsWithResults()
+  {
+    $sql = "
+      SELECT DISTINCT
+        TET.trackEventTypeId,
+        TE.eventGender,
+        TET.eventName,
+        TET.eventType,
+        TET.raceType
+      FROM
+        TrackEventType TET
+      JOIN
+        TrackEvent TE ON TET.trackEventTypeId = TE.trackEventTypeId
+      ORDER BY
+        TET.raceType,
+        TET.eventType,
+        TET.distance,
+        TE.eventGender DESC
+    ";
+
+    try
+    {
+      return $this->fetch($sql);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
    * @param $eventTypeId
    * @param $gender
-   * @return int|null
+   * @param int $limit
+   * @return array|null
    */
-  public function getTopEventRecord($eventTypeId, $gender)
+  public function getTopEventRecords($eventTypeId, $gender, $limit = 1)
   {
     $sql = "
       SELECT
-        R.resultInSeconds,
-        R.resultInInches,
-        T.eventType
+        S.firstName,
+        S.lastName,
+        TER.resultInSeconds,
+        TER.resultInInches,
+        TMD.meetName,
+        TM.meetSubName,
+        DATE_FORMAT(TM.meetDate, '%b %e, %Y') AS meetDate
       FROM
-        TrackEventType T
+        TrackEvent TE
       JOIN
-        TrackEvent E ON T.trackEventTypeId = E.trackEventTypeId AND E.eventGender = :gender
+        TrackMeet TM ON TE.trackMeetId = TM.trackMeetId
       JOIN
-        TrackStudentEvent SE ON E.trackEventId = SE.trackEventId
+        TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
       JOIN
-        TrackEventResult R ON SE.trackStudentEventId = R.trackStudentEventId
+        TrackStudentEvent TSE ON TE.trackEventId = TSE.trackEventId
+      JOIN
+        TrackEventResult TER ON TSE.trackStudentEventId = TER.trackStudentEventId
+      JOIN
+        Student S ON TSE.studentId = S.studentId
       WHERE
-        T.trackEventTypeId = :eventTypeId
-      LIMIT 1;
+        TE.trackEventTypeID = :eventTypeId
+      AND
+        TE.eventGender = :gender
+      ORDER BY
+        TER.resultInSeconds,
+        TER.resultInInches DESC
+      LIMIT $limit;
     ";
 
     $bindParams = array(
@@ -455,7 +503,62 @@ class TrackSQL extends SQLPersistence
         return null;
       }
 
-      return (($results[0]['eventType'] == 'race') ? $results[0]['resultInSeconds'] : $results[0]['resultInInches']);
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $eventTypeId
+   * @param $gender
+   * @param int $limit
+   * @return array|null
+   */
+  public function getTopRelayRecords($eventTypeId, $gender, $limit = 1)
+  {
+    $sql = "
+      SELECT
+        TRT.trackRelayTeamId,
+        TRT.result,
+        TMD.meetName,
+        TM.meetSubName,
+        DATE_FORMAT(TM.meetDate, '%b %e, %Y') AS meetDate
+      FROM
+        TrackEvent TE
+      JOIN
+        TrackMeet TM ON TE.trackMeetId = TM.trackMeetId
+      JOIN
+        TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
+      JOIN
+        TrackRelayTeam TRT ON TE.trackEventId = TRT.trackEventId
+      WHERE
+        TE.trackEventTypeId = :eventTypeId
+      AND
+        TE.eventGender = :gender
+      ORDER BY
+        TRT.result
+      LIMIT $limit
+    ";
+
+    $bindParams = array(
+      ':gender'      => $gender,
+      ':eventTypeId' => $eventTypeId
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
     }
     catch (\PDOException $e)
     {

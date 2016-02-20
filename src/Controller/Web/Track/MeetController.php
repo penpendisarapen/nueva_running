@@ -103,4 +103,12 @@ class MeetController
     ));
   }
 
+  /**
+   * @return mixed
+   */
+  public function renderResources()
+  {
+    return $this->App['twig']->render('Track/resources.twig', array());
+  }
+
 }

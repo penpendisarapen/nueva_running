@@ -18,17 +18,27 @@ class RecordsController
   /**
    * @var RecordsService
    */
-  private $ScheduleService;
+  private $RecordsService;
 
+  /**
+   * RecordsController constructor.
+   * @param Application $App
+   * @param RecordsService $RecordsService
+   */
   public function __construct(Application $App, RecordsService $RecordsService)
   {
-    $this->App             = $App;
-    $this->ScheduleService = $RecordsService;
+    $this->App            = $App;
+    $this->RecordsService = $RecordsService;
   }
 
+  /**
+   * @return mixed
+   */
   public function renderRecords()
   {
-    return $this->App['twig']->render('Track/records.twig', array());
+    return $this->App['twig']->render('Track/records.twig', array(
+      'eventRecords' => $this->RecordsService->getSchoolRecords()
+    ));
   }
 
 }

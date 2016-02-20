@@ -280,9 +280,8 @@ class MeetService
 
     foreach ($results as &$result)
     {
-      $Result = $eventType === 'track' ? new ResultTime($result['resultInSeconds']) : new ResultMeasurement($result['resultInInches']);
-
-      $result['result'] = $Result->getResult();
+      $Result                 = $eventType === 'track' ? new ResultTime($result['resultInSeconds']) : new ResultMeasurement($result['resultInInches']);
+      $result['result']       = $Result->getResult();
       $result['overallPlace'] = $result['overallPlace'] ?: 'n/a';
     }
 

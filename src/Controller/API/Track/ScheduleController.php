@@ -27,7 +27,7 @@ class ScheduleController
 
   public function getCurrentSchedule()
   {
-    $data = $this->ScheduleService->getCurrentSeason();
+    $data = $this->ScheduleService->getCurrentSeasonSchedule();
     return $this->App->json($data);
   }
 

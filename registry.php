@@ -14,6 +14,10 @@ $app->register(new \Silex\Provider\TwigServiceProvider(), array('twig.path' => _
 
 $Factory = new ObjectFactory($app);
 
+$app['service.currentSeason'] = $app->share(function() use ($Factory) {
+  return $Factory->createCurrentSeason();
+});
+
 $app['service.student'] = $app->share(function() use ($Factory) {
   return $Factory->createStudentService();
 });

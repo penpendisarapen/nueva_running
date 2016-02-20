@@ -4,6 +4,15 @@
 {% block pageTitle %}Schedule{% endblock %}
 
 {% block content %}
+  <form>
+    <label for="season">Change Season:</label>
+    <select name="season" id="season">
+      {% for i in currentSeason..firstSeason %}
+        <option value="{{ i }}" {% if i == selectedSeason %}selected{% endif %}>{{ i }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-xs btn-info">Go</button>
+  </form>
 
   <table class="table table-striped small">
     <thead>

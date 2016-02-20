@@ -21,6 +21,8 @@ class MeetService
   const RACE_TYPE_SOLO = 'individual';
   const RACE_TYPE_RELAY = 'relay';
 
+  const FIRST_SEASON = 2014;
+
   /**
    * @var TrackSQL
    */
@@ -32,11 +34,28 @@ class MeetService
   }
 
   /**
+   * @return int
+   */
+  public function getFirstSeasonYear()
+  {
+    return self::FIRST_SEASON;
+  }
+
+  /**
    * @return array
    */
-  public function getCurrentSeason()
+  public function getCurrentSeasonSchedule()
   {
     return $this->TrackSQL->getCurrentSeasonSchedule();
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getSeasonSchedule(Season $Season)
+  {
+    return $this->TrackSQL->getSeasonSchedule($Season);
   }
 
   /**

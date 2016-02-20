@@ -24,10 +24,10 @@ class SQLPersistence
    */
   protected $CurrentSeason;
 
-  public function __construct(Application $App, CurrentSeason $CurrentSeason)
+  public function __construct(Application $App)
   {
     $this->App           = $App;
-    $this->CurrentSeason = $CurrentSeason;
+    $this->CurrentSeason = $App['service.currentSeason'];
   }
 
   /**

@@ -59,6 +59,16 @@ class TrackSQL extends SQLPersistence
    */
   public function getCurrentSeasonSchedule()
   {
+    $Season = new Season($this->CurrentSeason->getEndYear());
+    return $this->getSeasonSchedule($Season);
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getSeasonSchedule(Season $Season)
+  {
     $sql = "
       SELECT
         D.trackMeetDetailId,
@@ -85,14 +95,13 @@ class TrackSQL extends SQLPersistence
       LEFT JOIN
         Location L ON M.locationId = L.locationId
       WHERE
-        M.meetDate BETWEEN :seasonStart AND :seasonEnd
+        YEAR(meetDate) = :season
       ORDER BY
         M.meetDate
     ";
 
     $bind_params = array(
-      ':seasonStart' => $this->CurrentSeason->getStartDate(),
-      ':seasonEnd'   => $this->CurrentSeason->getEndDate()
+      ':season' => $Season
     );
 
     try
@@ -105,6 +114,8 @@ class TrackSQL extends SQLPersistence
       return array('error');
     }
   }
+
+
 
   /**
    * @param Season $Season

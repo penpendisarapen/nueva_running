@@ -47,12 +47,17 @@ class ResultTime implements Result
       return $this->seconds;
     }
 
-    $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$d:%2$02d:%3$02d.%4$02d' : '%2$d:%3$02d.%4$02d';
+    $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$d:%2$02d:%3$02d.%4$s' : '%2$d:%3$02d.%4$s';
     $hours    = gmdate("H", $this->seconds);
     $minutes  = gmdate("i", $this->seconds);
     $seconds  = gmdate("s", $this->seconds);
     $parts    = explode(".", $this->seconds);
     $fraction = isset($parts[1]) ? $parts[1] : '00';
+
+    if (strlen($fraction) === 1)
+    {
+      $fraction .= '0';
+    }
 
     return sprintf($format, $hours, $minutes, $seconds, $fraction);
   }

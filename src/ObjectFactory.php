@@ -65,13 +65,13 @@ class ObjectFactory
    */
   private function createTrackSQL()
   {
-    return new TrackSQL($this->App, $this->createCurrentSeason());
+    return new TrackSQL($this->App);
   }
 
   /**
    * @return CurrentSeason
    */
-  private function createCurrentSeason()
+  public function createCurrentSeason()
   {
     return new CurrentSeason();
   }

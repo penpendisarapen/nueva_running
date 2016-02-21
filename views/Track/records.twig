@@ -16,6 +16,7 @@
     <table class="table table-striped">
     <thead>
     <tr>
+      <th>#</th>
       <th>Athlete</th>
       <th>Record</th>
       <th>Date</th>
@@ -25,6 +26,7 @@
     <tbody>
     {% for record in event.records %}
       <tr>
+        <td>{{ loop.index }}</td>
         <td>{{ record.firstName }} {{ record.lastName }}</td>
         <td>{{ record.result }}</td>
         <td>{{ record.meetDate }}</td>
@@ -46,6 +48,7 @@
     <table class="table table-striped">
       <thead>
       <tr>
+        <th>#</th>
         <th>Athletes</th>
         <th>Record</th>
         <th>Date</th>
@@ -55,6 +58,7 @@
       <tbody>
       {% for record in event.records %}
         <tr>
+          <td>{{ loop.index }}</td>
           <td>
             {% for athlete in record.members %}
               {{ athlete.firstName }} {{ athlete.lastName }}<br>

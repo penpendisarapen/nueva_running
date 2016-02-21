@@ -41,4 +41,14 @@ class RecordsController
     ));
   }
 
+  /**
+   * @return mixed
+   */
+  public function renderAthleteRecords($studentId)
+  {
+    return $this->App['twig']->render('Track/athleteRecords.twig', array(
+      'studentName' => $this->RecordsService->getAthleteName($studentId),
+      'athleteRecords' => $this->RecordsService->getAthleteRecords($studentId)
+    ));
+  }
 }

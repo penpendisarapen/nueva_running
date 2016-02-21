@@ -44,7 +44,7 @@ class ResultTime implements Result
   {
     if ($this->seconds < self::SECONDS_IN_MINUTE)
     {
-      return $this->seconds;
+      return sprintf("%.02f", $this->seconds);
     }
 
     $format   = ($this->seconds >= self::SECONDS_IN_HOUR) ? '%1$d:%2$02d:%3$02d.%4$s' : '%2$d:%3$02d.%4$s';
@@ -54,7 +54,7 @@ class ResultTime implements Result
     $parts    = explode(".", $this->seconds);
     $fraction = isset($parts[1]) ? $parts[1] : '00';
 
-    if (strlen($fraction) === 1)
+    if (strlen($fraction) == 1)
     {
       $fraction .= '0';
     }

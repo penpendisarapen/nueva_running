@@ -43,7 +43,7 @@
             <td>{{ athlete.studentName }}</td>
             <td class="text-center">{{ athlete.grade }}th</td>
             <td class="text-right">
-              <button type="button" class="btn btn-xs btn-primary">View History</button>
+              <a href="/track/records/athlete/{{ athlete.studentId }}"><button type="button" class="btn btn-xs btn-primary">View History</button></a>
             </td>
           </tr>
         {% endfor %}
@@ -81,5 +81,4 @@
       </table>
     </div>
   </div>
-
 {% endblock %}

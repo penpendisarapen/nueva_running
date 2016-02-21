@@ -485,7 +485,8 @@ class TrackSQL extends SQLPersistence
         TE.eventGender = :gender
       ORDER BY
         TER.resultInSeconds,
-        TER.resultInInches DESC
+        TER.resultInInches DESC,
+        TM.meetDate
       LIMIT $limit;
     ";
 
@@ -546,6 +547,144 @@ class TrackSQL extends SQLPersistence
 
     $bindParams = array(
       ':gender'      => $gender,
+      ':eventTypeId' => $eventTypeId
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  public function getStudentDataById($studentId)
+  {
+    $sql = "
+      SELECT
+        firstName,
+        lastName,
+        gender,
+        class
+      FROM
+        Student
+      WHERE
+        studentId = :studentId
+    ";
+
+    $bindParams = array(':studentId' => $studentId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results[0];
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $studentId
+   * @return array|null
+   */
+  public function getStudentEvents($studentId)
+  {
+    $sql = "
+      SELECT DISTINCT
+        TET.trackEventTypeId,
+        TET.eventName,
+        TET.eventType,
+        TET.raceType,
+        TE.eventGender
+      FROM
+        TrackEventType TET
+      JOIN
+        TrackEvent TE ON TET.trackEventTypeId = TE.trackEventTypeId
+      JOIN
+        TrackStudentEvent TSE ON TE.trackEventId = TSE.trackEventId
+      AND
+        TSE.studentId = :studentId
+      ORDER BY
+        TET.raceType,
+        TET.eventType,
+        TET.distance,
+        TE.eventGender DESC
+    ";
+
+    $bindParams = array(':studentId' => $studentId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $studentId
+   * @param $eventTypeId
+   * @return array|null
+   */
+  public function getStudentEventRecords($studentId, $eventTypeId)
+  {
+    $sql = "
+      SELECT
+        TER.resultInSeconds,
+        TER.resultInInches,
+        TMD.meetName,
+        TM.meetSubName,
+        DATE_FORMAT(TM.meetDate, '%b %e, %Y') AS meetDate,
+        TER.place,
+        TSE.overallPlace,
+        TSE.medaled
+      FROM
+        TrackEvent TE
+      JOIN
+        TrackMeet TM ON TE.trackMeetId = TM.trackMeetId
+      JOIN
+        TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
+      JOIN
+        TrackStudentEvent TSE ON TE.trackEventId = TSE.trackEventId AND TSE.studentId = :studentId
+      JOIN
+        TrackEventResult TER ON TSE.trackStudentEventId = TER.trackStudentEventId
+      WHERE
+        TE.trackEventTypeID = :eventTypeId
+      ORDER BY
+        TM.meetDate;
+    ";
+
+    $bindParams = array(
+      ':studentId'   => $studentId,
       ':eventTypeId' => $eventTypeId
     );
 

@@ -42,6 +42,30 @@ class RecordsService
     return $events;
   }
 
+  public function getAthleteName($studentId)
+  {
+    $student = $this->TrackSQL->getStudentDataById($studentId);
+
+    if (empty($student))
+    {
+      return '';
+    }
+
+    return $student['firstName'] . ' ' . $student['lastName'];
+  }
+
+  public function getAthleteRecords($studentId)
+  {
+    $events = $this->TrackSQL->getStudentEvents($studentId);
+
+    foreach ($events as &$event)
+    {
+      $event['records'] = $this->getAthleteEventRecords($studentId, $event['trackEventTypeId'], $event['eventType'], $event['eventGender']);
+    }
+
+    return $events;
+  }
+
   /**
    * @param $event
    * @return array|null
@@ -52,8 +76,8 @@ class RecordsService
 
     foreach ($records as &$record)
     {
-      $Result             = $event['eventType'] === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
-      $record['result']   = $Result->getResult();
+      $Result           = $event['eventType'] === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
+      $record['result'] = $Result->getResult();
     }
 
     return $records;
@@ -69,12 +93,90 @@ class RecordsService
 
     foreach ($records as &$record)
     {
-      $Result = new ResultTime($record['result']);
-      $record['result']   = $Result->getResult();
+      $Result            = new ResultTime($record['result']);
+      $record['result']  = $Result->getResult();
       $record['members'] = $this->TrackSQL->getRelayMembersByTeamId($record['trackRelayTeamId']);
     }
 
     return $records;
   }
 
+  /**
+   * @param $studentId
+   * @param $eventTypeId
+   * @param $eventType
+   * @param $eventGender
+   * @return array|null
+   */
+  private function getAthleteEventRecords($studentId, $eventTypeId, $eventType, $eventGender)
+  {
+
+    $schoolRecord = $this->TrackSQL->getTopEventRecords($eventTypeId, $eventGender, 1);
+    $records      = $this->TrackSQL->getStudentEventRecords($studentId, $eventTypeId);
+    $pr           = null;
+    $prKey        = 0;
+
+    foreach ($records as $key => &$record)
+    {
+      $result                     = $eventType === 'track' ? $record['resultInSeconds'] : $record['resultInInches'];
+      $record['isPersonalRecord'] = false;
+      $record['isSchoolRecord']   = $this->isSchoolRecord($eventType, $schoolRecord[0], $result);
+
+      if ($this->isNewPersonalRecord($eventType, $pr, $result))
+      {
+        $pr    = $result;
+        $prKey = $key;
+      }
+
+      $Result           = $eventType === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
+      $record['result'] = $Result->getResult();
+    }
+
+    $records[$prKey]['isPersonalRecord'] = true;
+
+    return $records;
+  }
+
+  /**
+   * @param string $evenType
+   * @param float $personalRecord
+   * @param float $value
+   * @return bool
+   */
+  private function isNewPersonalRecord($evenType, $personalRecord, $value)
+  {
+    if (empty($personalRecord))
+    {
+      return true;
+    }
+
+    if ($evenType === 'track' && $value < $personalRecord)
+    {
+      return true;
+    }
+
+    if ($evenType === 'field' && $value > $personalRecord)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param $eventType
+   * @param $eventTypeId
+   * @param $eventGender
+   * @param $record
+   * @return bool
+   */
+  private function isSchoolRecord($eventType, $schoolRecord, $record)
+  {
+    if ($eventType === 'track')
+    {
+      return ($record === $schoolRecord['resultInSeconds']);
+    }
+
+    return ($record === $schoolRecord['resultInInches']);
+  }
 }

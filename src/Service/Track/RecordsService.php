@@ -58,6 +58,11 @@ class RecordsService
   {
     $events = $this->TrackSQL->getStudentEvents($studentId);
 
+    if (empty($events))
+    {
+      return array();
+    }
+
     foreach ($events as &$event)
     {
       $event['records'] = $this->getAthleteEventRecords($studentId, $event['trackEventTypeId'], $event['eventType'], $event['eventGender']);

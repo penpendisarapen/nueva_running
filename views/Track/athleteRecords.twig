@@ -22,8 +22,8 @@
       <tr>
         <th>Date</th>
         <th>Meet</th>
-        <th>Result</th>
-        <th>Overall</th>
+        <th class="text-center">Result</th>
+        <th class="text-center">Overall</th>
         <th>&nbsp;</th>
       </tr>
       </thead>
@@ -32,8 +32,8 @@
         <tr>
           <td class="col-md-3">{{ record.meetDate }}</td>
           <td class="col-md-4">{{ record.meetName }} {{ record.meetSubName }}</td>
-          <td class="col-md-2">{{ record.result }}</td>
-          <td class="col-md-2">{{ record.overallPlace }}</td>
+          <td class="col-md-2 text-center">{{ record.result }}</td>
+          <td class="col-md-2 text-center">{{ record.overallPlace }}</td>
           <td>
             {% if record.medaled %}
               <a href="#" data-toggle="tooltip" title="Won medal">
@@ -60,7 +60,10 @@
 
       </tbody>
     </table>
-
+  {% else %}
+    <div class="ptl">
+      Meet records have not been entered.
+    </div>
   {% endfor %}
 
   <script>

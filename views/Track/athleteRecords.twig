@@ -66,6 +66,60 @@
     </div>
   {% endfor %}
 
+  {% for event in relayRecords %}
+    <div class="page-header pbn">
+      <h3>{{ event.eventGender }} {{ event.eventName }}</h3>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Meet</th>
+        <th>Team Members</th>
+        <th class="text-center">Result</th>
+        <th class="text-center">Overall</th>
+        <th>&nbsp;</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for record in event.records %}
+        <tr>
+          <td class="col-md-3">{{ record.meetDate }}</td>
+          <td class="col-md-4">{{ record.meetName }} {{ record.meetSubName }}</td>
+
+          <td class="col-md-4">
+            {% for athlete in record.members %}
+              {{ athlete.firstName }} {{ athlete.lastName }}<br>
+            {% endfor %}
+          </td>
+          <td class="col-md-2 text-center">{{ record.result }}</td>
+          <td class="col-md-2 text-center">{{ record.overallPlace }}</td>
+          <td>
+            {% if record.medaled %}
+              <a href="#" data-toggle="tooltip" title="Won medal">
+                {% if record.overallPlace == 1 %}
+                  <img src="/assets/images/icons/gold_medal.png" width="20" height="20">
+                {% elseif record.overallPlace == 2 %}
+                  <img src="/assets/images/icons/silver_medal.png" width="20" height="20">
+                {% else %}
+                  <img src="/assets/images/icons/bronze_medal.png" width="20" height="20">
+                {% endif %}
+              </a>
+            {% endif %}
+
+            {% if record.isSchoolRecord %}
+              <a href="#" data-toggle="tooltip" title="School Record"><img src="/assets/images/icons/red_star.png" width="20" height="20"></a>
+            {% endif %}
+
+          </td>
+        </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  {% endfor %}
+
   <script>
     $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip();

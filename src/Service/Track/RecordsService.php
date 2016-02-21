@@ -15,6 +15,10 @@ class RecordsService
    */
   private $TrackSQL;
 
+  /**
+   * RecordsService constructor.
+   * @param TrackSQL $TrackSQL
+   */
   public function __construct(TrackSQL $TrackSQL)
   {
     $this->TrackSQL = $TrackSQL;
@@ -42,6 +46,10 @@ class RecordsService
     return $events;
   }
 
+  /**
+   * @param $studentId
+   * @return string
+   */
   public function getAthleteName($studentId)
   {
     $student = $this->TrackSQL->getStudentDataById($studentId);
@@ -54,6 +62,10 @@ class RecordsService
     return $student['firstName'] . ' ' . $student['lastName'];
   }
 
+  /**
+   * @param $studentId
+   * @return array|null
+   */
   public function getAthleteRecords($studentId)
   {
     $events = $this->TrackSQL->getStudentEvents($studentId);
@@ -66,6 +78,27 @@ class RecordsService
     foreach ($events as &$event)
     {
       $event['records'] = $this->getAthleteEventRecords($studentId, $event['trackEventTypeId'], $event['eventType'], $event['eventGender']);
+    }
+
+    return $events;
+  }
+
+  /**
+   * @param $studentId
+   * @return array
+   */
+  public function getAthleteRelayRecords($studentId)
+  {
+    $events = $this->TrackSQL->getStudentRelayEvents($studentId);
+
+    if (empty($events))
+    {
+      return array();
+    }
+
+    foreach ($events as &$event)
+    {
+      $event['records'] = $this->getAthleteRelayEventRecords($studentId, $event['trackEventTypeId'], $event['eventGender']);
     }
 
     return $events;
@@ -133,8 +166,8 @@ class RecordsService
         $prKey = $key;
       }
 
-      $Result           = $eventType === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
-      $record['result'] = $Result->getResult();
+      $ResultTime       = $eventType === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
+      $record['result'] = $ResultTime->getResult();
     }
 
     $records[$prKey]['isPersonalRecord'] = true;
@@ -170,8 +203,7 @@ class RecordsService
 
   /**
    * @param $eventType
-   * @param $eventTypeId
-   * @param $eventGender
+   * @param $schoolRecord
    * @param $record
    * @return bool
    */
@@ -183,5 +215,28 @@ class RecordsService
     }
 
     return ($record === $schoolRecord['resultInInches']);
+  }
+
+  /**
+   * @param $studentId
+   * @param $eventTypeId
+   * @param $eventGender
+   * @return array|null
+   */
+  private function getAthleteRelayEventRecords($studentId, $eventTypeId, $eventGender)
+  {
+    $schoolRecord = $this->TrackSQL->getTopRelayRecords($eventTypeId, $eventGender, 1);
+    $records      = $this->TrackSQL->getStudentRelayRecords($studentId, $eventTypeId);
+
+    foreach ($records as $key => &$record)
+    {
+      $result                   = $record['result'];
+      $ResultTime               = new ResultTime($result);
+      $record['result']         = $ResultTime->getResult();
+      $record['isSchoolRecord'] = ($schoolRecord[0]['result'] === $result);
+      $record['members']        = $this->TrackSQL->getRelayMembersByTeamId($record['trackRelayTeamId']);
+    }
+
+    return $records;
   }
 }

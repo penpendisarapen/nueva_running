@@ -706,6 +706,104 @@ class TrackSQL extends SQLPersistence
     }
   }
 
+  /**
+   * @param $studentId
+   * @return array|null
+   */
+  public function getStudentRelayEvents($studentId)
+  {
+    $sql = "
+      SELECT DISTINCT
+        TET.trackEventTypeId,
+        TET.eventName,
+        TET.eventType,
+        TET.raceType,
+        TE.eventGender
+      FROM
+        TrackEventType TET
+      JOIN
+        TrackEvent TE ON TET.trackEventTypeId = TE.trackEventTypeId
+      JOIN
+        TrackRelayTeam TRT ON TE.trackEventId = TRT.trackEventId
+      JOIN
+        TrackRelayTeamMember TRTM ON TRT.trackRelayTeamId = TRTM.trackRelayTeamId AND TRTM.studentId = :studentId
+    ";
+
+    $bindParams = array(':studentId' => $studentId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $studentId
+   * @param $eventTypeId
+   * @return array|null
+   */
+  public function getStudentRelayRecords($studentId, $eventTypeId)
+  {
+    $sql = "
+      SELECT
+        TRT.trackRelayTeamId,
+        TRT.result,
+        TRT.overallPlace,
+        TRT.medaled,
+        TMD.meetName,
+        TM.meetSubName,
+        DATE_FORMAT(TM.meetDate, '%b %e, %Y') AS meetDate
+      FROM
+        TrackEvent TE
+      JOIN
+        TrackMeet TM ON TE.trackMeetId = TM.trackMeetId
+      JOIN
+        TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
+      JOIN
+        TrackRelayTeam TRT ON TE.trackEventId = TRT.trackEventId
+      JOIN
+        TrackRelayTeamMember TRTM ON TRT.trackRelayTeamId = TRTM.trackRelayTeamId AND TRTM.studentId = :studentId
+      WHERE
+        TE.trackEventTypeId = :eventTypeId
+      ORDER BY
+        TM.meetDate
+    ";
+
+    $bindParams = array(
+      ':studentId'   => $studentId,
+      ':eventTypeId' => $eventTypeId
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
   public function getPersonalRecord($eventTypeId, $studentId)
   {
   }

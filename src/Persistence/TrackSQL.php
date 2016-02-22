@@ -516,6 +516,73 @@ class TrackSQL extends SQLPersistence
   /**
    * @param $eventTypeId
    * @param $gender
+   * @param $grade
+   * @param int $limit
+   * @return array|null
+   */
+  public function getTopeEventRecordsByGrade($eventTypeId, $gender, $grade, $limit = 1)
+  {
+    $sql = "
+      SELECT
+        S.firstName,
+        S.lastName,
+        TER.resultInSeconds,
+        TER.resultInInches,
+        TMD.meetName,
+        TM.meetSubName,
+        DATE_FORMAT(TM.meetDate, '%b %e, %Y') AS meetDate
+      FROM
+        TrackEvent TE
+      JOIN
+        TrackMeet TM ON TE.trackMeetId = TM.trackMeetId
+      JOIN
+        TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
+      JOIN
+        TrackStudentEvent TSE ON TE.trackEventId = TSE.trackEventId
+      JOIN
+        TrackEventResult TER ON TSE.trackStudentEventId = TER.trackStudentEventId
+      JOIN
+        Student S ON TSE.studentId = S.studentId
+      JOIN
+        TrackStudentSeason TSS ON TSE.studentId = TSS.studentId AND TSS.grade = :grade AND YEAR(TM.meetDate) = TSS.season
+      WHERE
+        TE.trackEventTypeID = :eventTypeId
+      AND
+        TE.eventGender = :gender
+      ORDER BY
+        TER.resultInSeconds,
+        TER.resultInInches DESC,
+        TM.meetDate
+      LIMIT $limit;
+    ";
+
+    $bindParams = array(
+      ':gender'      => $gender,
+      ':eventTypeId' => $eventTypeId,
+      ':grade'       => $grade
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $eventTypeId
+   * @param $gender
    * @param int $limit
    * @return array|null
    */

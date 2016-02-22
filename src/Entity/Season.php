@@ -15,6 +15,10 @@ class Season
    */
   private $season;
 
+  /**
+   * Season constructor.
+   * @param $season
+   */
   public function __construct($season)
   {
     if ($season instanceof Season)

@@ -6,7 +6,9 @@ namespace Mavericks\Controller\Web\Track;
 
 use Mavericks\Service\Track\MeetService;
 use Mavericks\Service\Track\RecordsService;
+use NuevaRunning\Entity\Grade;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 class RecordsController
 {
@@ -34,10 +36,24 @@ class RecordsController
   /**
    * @return mixed
    */
-  public function renderRecords()
+  public function renderRecords(Request $Request)
   {
+    $title = 'Nueva Mavericks';
+
+    if ($Request->get('grade'))
+    {
+      $Grade   = new Grade($Request->get('grade'));
+      $title   = $Grade->getGradeText();
+      $records = $this->RecordsService->getSchoolRecordsByGrade($Grade);
+    }
+    else
+    {
+      $records = $this->RecordsService->getSchoolRecords();
+    }
+
     return $this->App['twig']->render('Track/records.twig', array(
-      'eventRecords' => $this->RecordsService->getSchoolRecords()
+      'title'        => $title,
+      'eventRecords' => $records
     ));
   }
 

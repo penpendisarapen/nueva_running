@@ -5,6 +5,7 @@ namespace Mavericks\Service\Track;
 use Mavericks\Persistence\TrackSQL;
 use Mavericks\Entity\ResultTime;
 use Mavericks\Entity\ResultMeasurement;
+use NuevaRunning\Entity\Grade;
 
 class RecordsService
 {
@@ -39,11 +40,43 @@ class RecordsService
       }
       else
       {
-        $event['records'] = $this->getSchoolIndividualRecords($event);
+
+        $records          = $this->TrackSQL->getTopEventRecords($event['trackEventTypeId'], $event['eventGender'], self::MAX_RECORDS);
+        $event['records'] = $this->formatIndividualRecords($records, $event['eventType']);
       }
     }
 
     return $events;
+  }
+
+  /**
+   * @param Grade $Grade
+   * @return array
+   */
+  public function getSchoolRecordsByGrade(Grade $Grade)
+  {
+    $events           = $this->TrackSQL->getEventsWithResults();
+    $individualEvents = array();
+
+    foreach ($events as $event)
+    {
+      if ($event['raceType'] =='relay')
+      {
+        continue;
+      }
+
+      $records            = $this->TrackSQL->getTopeEventRecordsByGrade($event['trackEventTypeId'], $event['eventGender'], $Grade->getGrade(), self::MAX_RECORDS);
+
+      if (empty($records))
+      {
+        continue;
+      }
+
+      $event['records']   = $this->formatIndividualRecords($records, $event['eventType']);
+      $individualEvents[] = $event;
+    }
+
+    return $individualEvents;
   }
 
   /**
@@ -105,16 +138,15 @@ class RecordsService
   }
 
   /**
-   * @param $event
-   * @return array|null
+   * @param $records
+   * @param $eventType
+   * @return mixed
    */
-  private function getSchoolIndividualRecords($event)
+  private function formatIndividualRecords($records, $eventType)
   {
-    $records = $this->TrackSQL->getTopEventRecords($event['trackEventTypeId'], $event['eventGender'], self::MAX_RECORDS);
-
     foreach ($records as &$record)
     {
-      $Result           = $event['eventType'] === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
+      $Result           = $eventType === 'track' ? new ResultTime($record['resultInSeconds']) : new ResultMeasurement($record['resultInInches']);
       $record['result'] = $Result->getResult();
     }
 

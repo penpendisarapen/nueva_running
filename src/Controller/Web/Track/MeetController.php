@@ -69,6 +69,7 @@ class MeetController
   }
 
   /**
+   * @param Request $Request
    * @return mixed
    */
   public function renderAthletes(Request $Request)

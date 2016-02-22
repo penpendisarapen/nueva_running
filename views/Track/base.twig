@@ -25,7 +25,16 @@
         <li {% if activePage == 'home' %}class="active"{% endif %}><a href="/track">Home</a></li>
         <li {% if activePage == 'schedule' %}class="active"{% endif %}><a href="/track/schedule">Meet Schedule</a></li>
         <li {% if activePage == 'athletes' %}class="active"{% endif %}><a href="/track/athletes">Athletes</a></li>
-        <li {% if activePage == 'records' %}class="active"{% endif %}><a href="/track/records">Records</a></li>
+        <li class="dropdown {% if activePage == 'records' %}active{% endif %}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Records <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/track/records">School Records</a></li>
+            <li><a href="/track/records?grade=9">Freshman Records</a></li>
+            <li><a href="/track/records?grade=10">Sophomore Records</a></li>
+            <li><a href="/track/records?grade=11">Junior Records</a></li>
+            <li><a href="/track/records?grade=12">Senior Records</a></li>
+          </ul>
+        </li>
         <li {% if activePage == 'resources' %}class="active"{% endif %}><a href="/track/resources">Resources</a></li>
       </ul>
     </div><!--/.nav-collapse -->

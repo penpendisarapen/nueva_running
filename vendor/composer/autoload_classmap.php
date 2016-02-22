@@ -29,6 +29,7 @@ return array(
     'Mavericks\\Entity\\ResultTime' => $baseDir . '/src/Entity/ResultTime.php',
     'Mavericks\\Entity\\Season' => $baseDir . '/src/Entity/Season.php',
     'Mavericks\\Entity\\StudentId' => $baseDir . '/src/Entity/StudentId.php',
+    'Mavericks\\Exception\\InvalidGradeException' => $baseDir . '/src/Exception/InvalidGradeException.php',
     'Mavericks\\Exception\\InvalidMeetType' => $baseDir . '/src/Exception/InvalidMeetType.php',
     'Mavericks\\Exception\\InvalidResultMeasurementException' => $baseDir . '/src/Exception/InvalidResultMeasurementException.php',
     'Mavericks\\Exception\\InvalidResultTimeException' => $baseDir . '/src/Exception/InvalidResultTimeException.php',
@@ -45,4 +46,5 @@ return array(
     'Mavericks\\Service\\Track\\TrackService' => $baseDir . '/src/Service/Track/TrackService.php',
     'Maverics\\Entity\\DB\\TrackRelayTeamMember' => $baseDir . '/src/Entity/DB/TrackRelayTeamMember.php',
     'NuevaRunning\\Entity\\DB\\TrackEventResult' => $baseDir . '/src/Entity/DB/TrackEventResult.php',
+    'NuevaRunning\\Entity\\Grade' => $baseDir . '/src/Entity/Grade.php',
 );

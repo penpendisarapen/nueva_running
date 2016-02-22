@@ -5,7 +5,7 @@
 
 {% block content %}
   <div class="page-header pbn">
-    <h2>Nueva Mavericks Track &amp; Field Records</h2>
+    <h2>{{ title }} Track &amp; Field Records</h2>
   </div>
 
   {% for event in eventRecords if event.raceType == 'individual' %}

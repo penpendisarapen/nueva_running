@@ -114,6 +114,54 @@ class TrackSQL extends SQLPersistence
     }
   }
 
+  /**
+   * @return array
+   */
+  public function getNextMeet()
+  {
+    $sql = "
+      SELECT
+        D.trackMeetDetailId,
+        D.meetName,
+        D.meetType,
+        M.trackMeetId,
+        DATE_FORMAT(M.meetDate, '%b %e, %Y') AS meetDate,
+        DATE_FORMAT(M.meetDate, '%l:%i %p') AS meetTime,
+        M.teamRequired,
+        M.isOptional,
+        M.resultsURL,
+        M.meetSubName,
+        L.locationId,
+        L.locName,
+        L.locStreet1,
+        L.locStreet2,
+        L.locCity,
+        L.locState,
+        L.locZipCode
+      FROM
+        TrackMeet M
+      JOIN
+        TrackMeetDetails D ON D.trackMeetDetailId = M.trackMeetDetailId
+      LEFT JOIN
+        Location L ON M.locationId = L.locationId
+      WHERE
+        meetDate >= NOW()
+      ORDER BY
+        M.meetDate
+      LIMIT 1
+    ";
+
+    try
+    {
+      $result = $this->fetch($sql);
+      return $result[0];
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
 
 
   /**

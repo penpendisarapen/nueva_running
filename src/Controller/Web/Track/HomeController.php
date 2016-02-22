@@ -31,6 +31,7 @@ class HomeController
   public function renderHome()
   {
     return $this->App['twig']->render('Track/home.twig', array(
+      'nextMeet'      => $this->TrackService->getUpcomingMeet(),
       'announcements' => $this->TrackService->getLatestAnnouncements()
     ));
   }

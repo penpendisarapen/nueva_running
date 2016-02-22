@@ -4,6 +4,37 @@
 {% block pageTitle %}Home{% endblock %}
 
 {% block content %}
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Upcoming Track Meet</h3>
+        </div>
+        <div class="panel-body">
+          {% if nextMeet is empty %}
+            No future meets have been scheduled.
+          {% else %}
+            <div>
+              <strong>
+                {{ nextMeet.meetName }} {{ nextMeet.meetSubName }}<br>
+              </strong>
+            </div>
+            <div>
+              {{ nextMeet.meetDate }}, {{ nextMeet.meetTime }}<br>
+              {{ nextMeet.locName }}<br>
+              <a href="http://maps.google.com/?q={{ nextMeet.locStreet1 }}, {{ nextMeet.locCity }}, {{ nextMeet.locState }}, {{ nextMeet.locZipCode }}"
+                 target="_blank">
+                {{ nextMeet.locStreet1 }}<br>
+                {% if nextMeet.locStreet2 %}{{ nextMeet.locStreet2 }}<br>{% endif %}
+                {{ nextMeet.locCity }}, {{ nextMeet.locState }} {{ nextMeet.locZipCode }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% for announcement in announcements %}
     <div class="well">
       <div class="pbm">

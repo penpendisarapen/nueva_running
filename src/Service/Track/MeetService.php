@@ -114,11 +114,12 @@ class MeetService
 
   /**
    * @param $meetId
+   * @param bool $sortByStartTime
    * @return array
    */
-  public function getMeetResults($meetId)
+  public function getMeetResults($meetId, $sortByStartTime = false)
   {
-    $events = $this->TrackSQL->getEventsByMeetId($meetId);
+    $events = $this->TrackSQL->getEventsByMeetId($meetId, $sortByStartTime);
 
     $meetResults = array(
       'individual' => array(),

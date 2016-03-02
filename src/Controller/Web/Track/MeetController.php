@@ -98,9 +98,13 @@ class MeetController
    */
   public function renderMeetResults($meetId)
   {
+    $meetDetails       = $this->MeetService->getMeetDetails($meetId);
+    $showEventSchedule = (strtotime($meetDetails['meetDate']) > strtotime('tomorrow'));
+
     return $this->App['twig']->render('Track/meetResults.twig', array(
-      'meetDetails' => $this->MeetService->getMeetDetails($meetId),
-      'meetResults' => $this->MeetService->getMeetResults($meetId)
+      'showEventSchedule' => $showEventSchedule,
+      'meetDetails'       => $meetDetails,
+      'meetResults'       => $this->MeetService->getMeetResults($meetId, $showEventSchedule)
     ));
   }
 

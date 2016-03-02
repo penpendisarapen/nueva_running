@@ -30,6 +30,7 @@
         {% for event in meetResults.individual %}
           <div class="page-header pbn">
             <h4>
+              {% if event.eventStartTime and showEventSchedule %}{{ event.eventStartTime }} &mdash; {% endif %}
               {{ event.eventGender }}
               {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
               {{ event.eventName }}

@@ -283,15 +283,19 @@ class TrackSQL extends SQLPersistence
 
   /**
    * @param $meetId
+   * @param bool $sortByStartTime
    * @return array
    */
-  public function getEventsByMeetId($meetId)
+  public function getEventsByMeetId($meetId, $sortByStartTime = false)
   {
+    $startTimeSort = $sortByStartTime ? 'E.eventStartTime,' : '';
+
     $sql = "
       SELECT
         E.trackEventId,
         E.eventGender,
         E.eventSubType,
+        DATE_FORMAT(E.eventStartTime, '%l:%i %p') AS eventStartTime,
         T.trackEventTypeId,
         T.eventName,
         T.eventType,
@@ -303,6 +307,7 @@ class TrackSQL extends SQLPersistence
       WHERE
         E.trackMeetId = :meetId
       ORDER BY
+        $startTimeSort
         E.eventGender DESC,
         T.eventType,
         T.raceType DESC,

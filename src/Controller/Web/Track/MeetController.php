@@ -99,7 +99,7 @@ class MeetController
   public function renderMeetResults($meetId)
   {
     $meetDetails       = $this->MeetService->getMeetDetails($meetId);
-    $showEventSchedule = (strtotime($meetDetails['meetDate']) > strtotime('tomorrow'));
+    $showEventSchedule = (strtotime($meetDetails['meetDate']) > strtotime('-2 day'));
 
     return $this->App['twig']->render('Track/meetResults.twig', array(
       'showEventSchedule' => $showEventSchedule,

@@ -180,11 +180,15 @@ class RecordsService
    */
   private function getAthleteEventRecords($studentId, $eventTypeId, $eventType, $eventGender)
   {
-
     $schoolRecord = $this->TrackSQL->getTopEventRecords($eventTypeId, $eventGender, 1);
     $records      = $this->TrackSQL->getStudentEventRecords($studentId, $eventTypeId);
     $pr           = null;
     $prKey        = 0;
+
+    if (!is_array($records))
+    {
+      return array();
+    }
 
     foreach ($records as $key => &$record)
     {

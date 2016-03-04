@@ -163,6 +163,48 @@ class TrackSQL extends SQLPersistence
     }
   }
 
+  /**
+   * @param $meetId
+   * @return array
+   */
+  public function getWeatherByMeetId($meetId)
+  {
+    $sql = "
+      SELECT
+        trackMeetId,
+        high,
+        low,
+        conditions,
+        windAverage,
+        iconUrl
+      FROM
+        TrackWeatherForecast
+      WHERE
+        trackMeetId = :meetId
+    ";
+
+    $bindParams = array(
+      ':meetId' => $meetId
+    );
+
+    try
+    {
+      $result = $this->fetch($sql, $bindParams);
+
+      if (empty($result))
+      {
+        return array();
+      }
+
+      return $result[0];
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+
+  }
 
   /**
    * @param Season $Season

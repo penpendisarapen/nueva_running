@@ -104,7 +104,8 @@ class MeetController
     return $this->App['twig']->render('Track/meetResults.twig', array(
       'showEventSchedule' => $showEventSchedule,
       'meetDetails'       => $meetDetails,
-      'meetResults'       => $this->MeetService->getMeetResults($meetId, $showEventSchedule)
+      'meetResults'       => $this->MeetService->getMeetResults($meetId, $showEventSchedule),
+      'forecast'          => $this->MeetService->getWeatherForecastByMeetId($meetId)
     ));
   }
 

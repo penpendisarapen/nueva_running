@@ -42,15 +42,6 @@ class MeetService
   }
 
   /**
-   * @param Season $Season
-   * @return array
-   */
-  public function xgetAthletesBySeason(Season $Season)
-  {
-    return $this->TrackSQL->getAthletesBySeason($Season);
-  }
-
-  /**
    * @return array
    */
   public function getCurrentSeasonSchedule()
@@ -83,8 +74,7 @@ class MeetService
    */
   public function getAthletesBySeason(Season $Season)
   {
-    $data     = $this->TrackSQL->getStudentsBySeason($Season);
-    $athletes = array();
+    $data = $this->TrackSQL->getStudentsBySeason($Season);
 
     foreach ($data as &$student)
     {
@@ -101,6 +91,15 @@ class MeetService
   public function getMeetDetails($meetId)
   {
     return $this->TrackSQL->getMeetDetailsById($meetId);
+  }
+
+  /**
+   * @param $meetId
+   * @return array
+   */
+  public function getWeatherForecastByMeetId($meetId)
+  {
+    return $this->TrackSQL->getWeatherByMeetId($meetId);
   }
 
   /**

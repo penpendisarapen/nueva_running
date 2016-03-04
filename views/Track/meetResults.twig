@@ -11,12 +11,30 @@
       - {{ meetDetails.meetDate }}
     </h4>
   </div>
-  <div class="pbl">
-    {{ meetDetails.locName }}<br>
-    {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
-    {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
-  </div>
+  <div class="row pbl">
+    <div class="col-sm-3">
+      {{ meetDetails.locName }}<br>
+      {{ meetDetails.locCity }}, {{ meetDetails.locState }}<br>
+      {% if meetDetails.resultsURL %}<a href="{{ meetDetails.resultsURL }}" target="_blank">Live Results</a>{% endif %}
+    </div>
 
+    {% if forecast is not empty %}
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-body pas">
+          <img src="{{ forecast.iconUrl }}" align="right">
+
+          <strong>Forecast:</strong><br>
+          {{ forecast.conditions }}<br>
+          High: {{ forecast.high }}&deg;<br>
+          Low: {{ forecast.low }} &deg;<br>
+          Avg Wind Speed: {{ forecast.windAverage }} mph
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
   {% if meetResults.individual is empty and meetResults.relay is empty %}
     <div>No information has been posted for the meet.</div>
   {% else %}

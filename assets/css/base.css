@@ -17,6 +17,10 @@ body {
   width: auto;
 }
 
+.pas {
+  padding: 5px;
+}
+
 .pbn {
   padding-bottom: 0;
 }

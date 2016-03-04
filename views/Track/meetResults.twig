@@ -19,7 +19,7 @@
     </div>
 
     {% if forecast is not empty %}
-    <div class="col-sm-3">
+    <div class="col-sm-3 mts">
       <div class="panel panel-default">
         <div class="panel-body pas">
           <img src="{{ forecast.iconUrl }}" align="right">
@@ -27,7 +27,7 @@
           <strong>Forecast:</strong><br>
           {{ forecast.conditions }}<br>
           High: {{ forecast.high }}&deg;<br>
-          Low: {{ forecast.low }} &deg;<br>
+          Low: {{ forecast.low }}&deg;<br>
           Avg Wind Speed: {{ forecast.windAverage }} mph
         </div>
       </div>

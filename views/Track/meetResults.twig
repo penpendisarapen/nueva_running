@@ -109,6 +109,7 @@
         {% for event in meetResults.relay %}
           <div class="page-header" style="padding-bottom: 0;">
             <h4>
+              {% if event.eventStartTime and showEventSchedule %}{{ event.eventStartTime }} &mdash; {% endif %}
               {{ event.eventGender }}
               {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
               {{ event.eventName }}</h4>

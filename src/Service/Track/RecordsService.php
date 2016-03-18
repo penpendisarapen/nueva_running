@@ -161,6 +161,11 @@ class RecordsService
   {
     $records = $this->TrackSQL->getTopRelayRecords($event['trackEventTypeId'], $event['eventGender'], self::MAX_RECORDS);
 
+    if (!is_array($records))
+    {
+      return null;
+    }
+
     foreach ($records as &$record)
     {
       $Result            = new ResultTime($record['result']);

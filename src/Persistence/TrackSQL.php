@@ -697,7 +697,7 @@ class TrackSQL extends SQLPersistence
       JOIN
         TrackMeetDetails TMD ON TM.trackMeetDetailId = TMD.trackMeetDetailId
       JOIN
-        TrackRelayTeam TRT ON TE.trackEventId = TRT.trackEventId
+        TrackRelayTeam TRT ON TE.trackEventId = TRT.trackEventId AND TRT.result > 0
       WHERE
         TE.trackEventTypeId = :eventTypeId
       AND

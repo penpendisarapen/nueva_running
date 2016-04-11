@@ -23,6 +23,7 @@ class TrackSQL extends SQLPersistence
   {
     $sql = "
       SELECT
+        subject,
         content,
         DATE_FORMAT(announcementDate, '%b %e, %Y') AS `date`,
         author
@@ -33,7 +34,7 @@ class TrackSQL extends SQLPersistence
       AND
         announcementDate BETWEEN :seasonStart AND :seasonEnd
       ORDER BY
-        announcementDate
+        announcementDate DESC
       LIMIT $offset, $limit
     ";
 

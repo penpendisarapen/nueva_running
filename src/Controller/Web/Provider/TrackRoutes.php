@@ -23,8 +23,19 @@ class TrackRoutes implements ControllerProviderInterface
     $track->get("/meet/results/{meetId}/", "controller.web.track.meet:renderMeetResults");
     $track->get("/resources/", "controller.web.track.meet:renderResources");
 
-    $track->get("/admin/event/{meetId}/", "controller.web.track.admin:getAthleteEventEntry");
-    $track->post("/admin/event/{meetId}/", "controller.web.track.admin:postAthleteEventEntry");
+
+    $track->get("/admin/", "controller.web.track.admin:getAdminHome");
+
+    $track->get("/admin/meet/{meetId}/", "controller.web.track.admin:getMeetEventEntry");
+    $track->post("/admin/meet/{meetId}/", "controller.web.track.admin:postMeetEventEntry");
+
+    $track->get("/admin/meet/{meetId}/event/", "controller.web.track.admin:getEventEntry");
+    $track->post("/admin/meet/{meetId}/event/", "controller.web.track.admin:postEventEntry");
+
+    $track->get("/admin/meet/{meetId}/event/{eventId}/", "controller.web.track.admin:getEditEventEntry");
+    $track->post("/admin/meet/{meetId}/event/{eventId}/athlete/", "controller.web.track.admin:postEventAthlete");
+
+    $track->post("/admin/meet/{meetId}/event/{eventId}/result/", "controller.web.track.admin:postEventAthleteResult");
 
     return $track;
   }

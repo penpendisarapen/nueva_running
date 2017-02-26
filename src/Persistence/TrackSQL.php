@@ -3,6 +3,7 @@
 
 namespace Mavericks\Persistence;
 
+use Mavericks\Entity\DB\Time;
 use Mavericks\Entity\DB\TrackEvent;
 use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
@@ -499,11 +500,53 @@ class TrackSQL extends SQLPersistence
         raceType
       FROM
         TrackEventType
+      ORDER BY
+        raceType,
+        eventType,
+        eventName
     ";
 
     try
     {
       return $this->fetch($sql);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $eventTypeId
+   * @return array
+   */
+  public function getEventTypeById($eventTypeId)
+  {
+    $sql = "
+      SELECT
+        trackEventTypeId,
+        eventName,
+        eventType,
+        raceType
+      FROM
+        TrackEventType
+      WHERE
+        trackEventTypeId = :eventTypeId
+    ";
+
+    $bindParams = array(':eventTypeId' => $eventTypeId);
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return null;
+      }
+
+      return $results[0];
     }
     catch (\PDOException $e)
     {
@@ -815,6 +858,40 @@ class TrackSQL extends SQLPersistence
 
   /**
    * @param $studentId
+   * @param $eventId
+   * @return array|bool
+   */
+  public function isRegisteredForEvent($studentId, $eventId)
+  {
+    $sql = "
+      SELECT 1 FROM TrackStudentEvent WHERE studentId = :studentId AND trackEventId = :eventId
+    ";
+
+    $bindParams = array(
+      ':studentId' => $studentId,
+      ':eventId'   => $eventId
+    );
+
+    try
+    {
+      $results = $this->fetch($sql, $bindParams);
+
+      if (empty($results))
+      {
+        return false;
+      }
+
+      return true;
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param $studentId
    * @param $eventTypeId
    * @return array|null
    */
@@ -1057,8 +1134,12 @@ class TrackSQL extends SQLPersistence
         ->setTrackMeetId($results[0]['trackMeetId'])
         ->setTrackEventTypeId($results[0]['trackEventTypeId'])
         ->setEventGender($results[0]['eventGender'])
-        ->setEventSubType($results[0]['eventSubType'])
-        ->setEventStartTime($results[0]['eventStartTime']);
+        ->setEventSubType($results[0]['eventSubType']);
+
+      if ($results[0]['eventStartTime'])
+      {
+        $TrackEvent->setEventStartTime(new Time($results[0]['eventStartTime']));
+      }
 
       return $TrackEvent;
     }

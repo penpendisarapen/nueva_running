@@ -48,7 +48,7 @@ class Time
    */
   private function throwOnInvalidTime($time)
   {
-    if (!preg_match('/\d\d:\d\d:\d\d', $time))
+    if (!preg_match('/\d\d:\d\d:\d\d/', $time))
     {
       throw new InvalidTimeException('Invalid time format.');
     }
@@ -57,17 +57,17 @@ class Time
 
     if ((int)$hour >= 24 || (int)$hour <= 0)
     {
-      throw new InvalidTimeException('Hour value is invalid: $hour');
+      throw new InvalidTimeException("Hour value is invalid: $hour");
     }
 
-    if ((int)$minute >= 60 || (int)$minute <= 0)
+    if ((int)$minute >= 60 || (int)$minute < 0)
     {
-      throw new InvalidTimeException('Minute value is invalid: $minute');
+      throw new InvalidTimeException("Minute value is invalid: $minute");
     }
 
-    if ((int)$second >= 60 || (int)$second <= 0)
+    if ((int)$second >= 60 || (int)$second < 0)
     {
-      throw new InvalidTimeException('Second value is invalid: $second');
+      throw new InvalidTimeException("Second value is invalid: $second");
     }
   }
 }

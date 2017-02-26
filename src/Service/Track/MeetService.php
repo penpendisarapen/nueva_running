@@ -72,16 +72,23 @@ class MeetService
    * @param Season $Season
    * @return array
    */
-  public function getAthletesBySeason(Season $Season)
+  public function getAthletesBySeason(Season $Season, $gender = null)
   {
     $data = $this->TrackSQL->getStudentsBySeason($Season);
+    $athletes = array();
 
-    foreach ($data as &$student)
+    foreach ($data as $athlete)
     {
-      $student['studentName'] = $student['firstName'] . ' ' . $student['lastName'];
+      if ($gender && $athlete['gender'] !== $gender)
+      {
+        continue;
+      }
+
+      $athlete['studentName'] = $athlete['firstName'] . ' ' . $athlete['lastName'];
+      $athletes[] = $athlete;
     }
 
-    return $data;
+    return $athletes;
   }
 
   /**
@@ -145,6 +152,35 @@ class MeetService
   public function getEventTypes()
   {
     return $this->TrackSQL->getEventTypes();
+  }
+
+  /**
+   * @param $eventId
+   * @return array
+   */
+  public function getTrackEventDetail($eventId)
+  {
+    $TrackEvent     = $this->TrackSQL->getTrackEventById($eventId);
+    $trackEventType = $this->TrackSQL->getEventTypeById($TrackEvent->getTrackEventTypeId());
+
+    return array(
+      'name'      => $trackEventType['eventName'],
+      'type'      => $trackEventType['eventType'],
+      'gender'    => $TrackEvent->getEventGender(),
+      'subType'   => $TrackEvent->getEventSubType(),
+      'startTime' => $TrackEvent->getEventStartTime(),
+      'results'   => $this->getEventResults($eventId, $trackEventType['eventType'], $trackEventType['raceType'])
+    );
+  }
+
+  /**
+   * @param $studentId
+   * @param $eventId
+   * @return array|bool
+   */
+  public function isRegisteredForEvent($studentId, $eventId)
+  {
+    return $this->TrackSQL->isRegisteredForEvent($studentId, $eventId);
   }
 
   /**

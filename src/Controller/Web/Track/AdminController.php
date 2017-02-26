@@ -7,7 +7,6 @@ use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\ResultMeasurement;
 use Mavericks\Entity\ResultTime;
-use Mavericks\Entity\Season;
 use Maverics\Entity\DB\TrackRelayTeamMember;
 use NuevaRunning\Entity\DB\TrackEventResult;
 use Silex\Application;
@@ -34,15 +33,45 @@ class AdminController
     $this->MeetService = $MeetService;
   }
 
+  public function getAdminHome()
+  {
+    return $this->App['twig']->render('Track/Admin/home.twig');
+  }
+
+
   /**
    * @param $meetId
    * @return mixed
    */
-  public function getAthleteEventEntry($meetId)
+  public function getMeetEventEntry($meetId)
   {
-    $data = $this->getPageData($meetId);
+    $data = $this->getMeetPageData($meetId);
 
     return $this->App['twig']->render('Track/Admin/athleteEventEntry.twig', $data);
+  }
+
+
+  /**
+   * @param $meetId
+   * @return mixed
+   */
+  public function getEventEntry($meetId)
+  {
+    $data = $this->getEventPageData($meetId);
+
+    return $this->App['twig']->render('Track/Admin/eventEntry.twig', $data);
+  }
+
+  /**
+   * @param $meetId
+   * @param $eventId
+   * @return mixed
+   */
+  public function getEditEventEntry($meetId, $eventId)
+  {
+    $data = $this->getEventEditPageData($meetId, $eventId);
+
+    return $this->App['twig']->render('Track/Admin/editEvent.twig', $data);
   }
 
   /**
@@ -50,13 +79,13 @@ class AdminController
    * @param $meetId
    * @return mixed
    */
-  public function postAthleteEventEntry(Request $Request, $meetId)
+  public function postMeetEventEntry(Request $Request, $meetId)
   {
     $message = '';
 
     if ($Request->get('formType'))
     {
-      $TrackEvent   = $this->createTrackEventFromRequest($Request);
+      $TrackEvent   = $this->createTrackEventFromRequest($Request, $meetId);
 
       switch ($Request->get('formType'))
       {
@@ -95,17 +124,72 @@ class AdminController
       }
     }
 
-    $data            = $this->getPageData($meetId);
+    $data            = $this->getMeetPageData($meetId);
     $data['message'] = $message;
 
     return $this->App['twig']->render('Track/Admin/athleteEventEntry.twig', $data);
   }
 
   /**
+   * @param Request $Request
+   * @param $meetId
+   * @return mixed
+   */
+  public function postEventEntry(Request $Request, $meetId)
+  {
+    $TrackEvent = $this->createTrackEventFromRequest($Request, $meetId);
+    $eventId    = $this->MeetService->addMeetEvent($TrackEvent);
+
+    return $this->App->redirect("/track/admin/meet/$meetId/event/$eventId/");
+  }
+
+  /**
+   * @param Request $Request
+   * @param $meetId
+   * @param $eventId
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function postEventAthlete(Request $Request, $meetId, $eventId)
+  {
+    $TrackEvent        = new TrackEvent();
+    $TrackEvent->setTrackEventId($eventId);
+
+    foreach ($Request->get('studentId') as $studentId)
+    {
+      if ($this->MeetService->isRegisteredForEvent($studentId, $eventId))
+      {
+        continue;
+      }
+
+      $TrackStudentEvent = $this->createBasicStudentEvent($meetId, $eventId, $studentId);
+      $this->MeetService->addAthleteToEvent($TrackEvent, $TrackStudentEvent);
+    }
+
+    return $this->App->redirect("/track/admin/meet/$meetId/event/$eventId/");
+  }
+
+  /**
+   * @param Request $Request
+   * @param $meetId
+   * @param $eventId
+   * @return mixed
+   */
+  public function postEventAthleteResult(Request $Request, $meetId, $eventId)
+  {
+    $TrackEventResult = $this->createEventResultFromRequest($Request);
+    $this->MeetService->addEventResult($TrackEventResult);
+
+    $TrackStudentEvent = $this->createStudentEventFromRequest($Request);
+    $this->MeetService->updateStudentEvent($TrackStudentEvent);
+
+    return $this->App->redirect("/track/admin/meet/$meetId/event/$eventId/");
+  }
+
+  /**
    * @param $meetId
    * @return array
    */
-  private function getPageData($meetId)
+  private function getMeetPageData($meetId)
   {
     $Season = $this->MeetService->getSeasonByMeetId($meetId);
 
@@ -119,14 +203,77 @@ class AdminController
   }
 
   /**
+   * @param $meetId
+   * @return array
+   */
+  private function getEventPageData($meetId)
+  {
+    return  array(
+      'meetId'      => $meetId,
+      'meetDetails' => $this->MeetService->getMeetDetails($meetId),
+      'events'      => $this->MeetService->getEventTypes()
+    );
+  }
+
+  /**
+   * @param $meetId
+   * @param $eventId
+   * @return array
+   */
+  private function getEventEditPageData($meetId, $eventId)
+  {
+    $Season = $this->MeetService->getSeasonByMeetId($meetId);
+    $event  = $this->MeetService->getTrackEventDetail($eventId);
+    $gender = $event['gender'] === 'Boys' ? 'M' : 'F';
+    $athletes = $this->getAthletesForEvent($event['results'], $this->MeetService->getAthletesBySeason($Season, $gender));
+
+    return  array(
+      'meetId'      => $meetId,
+      'eventId'     => $eventId,
+      'meetDetails' => $this->MeetService->getMeetDetails($meetId),
+      'event'       => $event,
+      'athletes'    => $athletes
+    );
+  }
+
+  /**
+   * @param $eventResults
+   * @param $athletes
+   * @return mixed
+   */
+  private function getAthletesForEvent($eventResults, $athletes)
+  {
+    $eventStudents = array();
+
+    foreach ($eventResults as $student)
+    {
+      $eventStudents[] = $student['studentId'];
+    }
+
+    foreach ($athletes as &$athlete)
+    {
+      if (in_array($athlete['studentId'], $eventStudents))
+      {
+        $athlete['checked'] = true;
+      }
+      else
+      {
+        $athlete['checked'] = false;
+      }
+    }
+
+    return $athletes;
+  }
+
+  /**
    * @param Request $Request
    * @return TrackEvent
    */
-  private function createTrackEventFromRequest(Request $Request)
+  private function createTrackEventFromRequest(Request $Request, $meetId)
   {
     $TrackEvent = new TrackEvent();
     $TrackEvent
-      ->setTrackMeetId($Request->get('trackMeetId'))
+      ->setTrackMeetId($meetId)
       ->setTrackEventTypeId($Request->get('trackEventTypeId'))
       ->setEventGender($Request->get('eventGender'));
 
@@ -137,12 +284,33 @@ class AdminController
 
     if ($Request->get('eventStartTime'))
     {
-      $Time = new Time($Request->get('eventStartTime'));
+      $eventStartTime = $this->formatStartTime($Request->get('eventStartTime'));
+      $Time           = new Time($eventStartTime);
 
       $TrackEvent->setEventStartTime($Time);
     }
 
     return $TrackEvent;
+  }
+
+  /**
+   * @param $time
+   * @return string
+   */
+  private function formatStartTime($time)
+  {
+    $bits = explode(":", $time);
+
+    $ampm = substr($bits[1], -2);
+    $hour = $bits[0];
+    $min  = substr($bits[1], 0, 2);
+
+    if ($ampm == 'PM' && $hour < 12)
+    {
+      $hour += 12;
+    }
+
+    return sprintf("%02d:%02d:00", $hour, $min);
   }
 
   /**
@@ -166,6 +334,23 @@ class AdminController
     {
       $TrackStudentEvent->setOverallPlace($Request->get('overallPlace'));
     }
+
+    return $TrackStudentEvent;
+  }
+
+  /**
+   * @param $meetId
+   * @param $eventId
+   * @param $studentId
+   * @return TrackStudentEvent
+   */
+  public function createBasicStudentEvent($meetId, $eventId, $studentId)
+  {
+    $TrackStudentEvent = new TrackStudentEvent();
+    $TrackStudentEvent
+      ->setTrackMeetId($meetId)
+      ->setTrackEventId($eventId)
+      ->setStudentId($studentId);
 
     return $TrackStudentEvent;
   }

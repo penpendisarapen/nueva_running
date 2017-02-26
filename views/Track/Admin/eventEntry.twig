@@ -1,0 +1,83 @@
+{% set activePage = 'schedule' %}
+{% extends "Track/base.twig" %}
+
+{% block header %}
+  {{ parent() }}
+  <link rel="stylesheet" href="/assets/3rdParty/jquery.timeentry/jquery.timeentry.css">
+  <script src="/assets/3rdParty/jquery.timeentry/jquery.plugin.js"></script>
+  <script src="/assets/3rdParty/jquery.timeentry/jquery.timeentry.js"></script>
+  <script>
+    $(function () {
+      $('#startTimeEntry').timeEntry({spinnerImage: '/assets/3rdParty/jquery.timeentry/spinnerDefault.png'});
+    });
+  </script>
+{% endblock %}
+
+{% block pageTitle %}Meet Results{% endblock %}
+
+{% block content %}
+  <div class="page-header pbn"><h4>Meet Event Entry</h4></div>
+
+  <div>
+    <h5>
+      {{ meetDetails.meetName }}
+      {% if meetDetails.meetSubName %}{{ meetDetails.meetSubName }}{% endif %}
+      - {{ meetDetails.meetDate }}
+    </h5>
+  </div>
+
+  <form name="addEvent" method="post">
+    <fieldset>
+      <div class="row">
+        <div class="col-md-2">Select event:</div>
+        <div class="col-md-4">
+          <select name="trackEventTypeId">
+            <option value="">--Select--</option>
+            {% for event in events %}
+              <option value="{{ event.trackEventTypeId }}">{{ event.eventName }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">Select gender:</div>
+        <div class="col-md-4">
+          <select name="eventGender">
+            <option value="">--Select--</option>
+            <option value="Boys">Boys</option>
+            <option value="Girls">Girls</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">Select type:</div>
+        <div class="col-md-4">
+          <select name="eventSubType">
+            <option value="">None</option>
+            <option value="Varsity">Varsity</option>
+            <option value="JV">JV</option>
+            <option value="Frosh-Soph">Frosh-Soph</option>
+            <option value="Frosh">Frosh</option>
+            <option value="Soph">Soph</option>
+            <option value="Frosh-Soph (Invitational)">Frosh-Soph (Invitational)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">Select start time:</div>
+        <div class="col-md-4">
+          <input name="eventStartTime" type="text" id="startTimeEntry" size="10">
+        </div>
+      </div>
+
+      <div class="ptm">
+        <button type="submit" class="btn btn-primary">Add Event</button>
+      </div>
+
+    </fieldset>
+  </form>
+
+{% endblock %}

@@ -9,7 +9,7 @@ use NuevaRunning\Entity\Grade;
 
 class RecordsService
 {
-  const MAX_RECORDS = 5;
+  const MAX_RECORDS = 10;
 
   /**
    * @var TrackSQL

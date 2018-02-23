@@ -1,0 +1,187 @@
+{% set activePage = 'schedule' %}
+{% extends "Track/base.twig" %}
+
+{% block pageTitle %}Meet Entry for {{ currentSeason }}{% endblock %}
+
+{% block content %}
+  <div class="page-header pbn"><h3>Meet Entry for {{ currentSeason }}</h3></div>
+
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="page-header pbn"><h3>Current Meet Schedule</h3></div>
+      <table class="table table-striped small">
+        <thead>
+        <tr>
+          <th>Meet</th>
+          <th>Date</th>
+          <th>Attendance</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for meet in meetSchedule %}
+          <tr>
+            <td>
+              <div>
+                <strong>
+                  {{ meet.meetName }} {{ meet.meetSubName }}
+                </strong>
+              </div>
+              <div>
+                {{ meet.locName }}&nbsp;&nbsp;
+                <div>
+                  <a href="http://maps.google.com/?q={{ meet.locStreet1 }}, {{ meet.locCity }}, {{ meet.locState }}, {{ meet.locZipCode }}"
+                     target="_blank">
+                    {{ meet.locStreet1 }}<br>
+                    {% if meet.locStreet2 %}{{ meet.locStreet2 }}<br>{% endif %}
+                    {{ meet.locCity }}, {{ meet.locState }} {{ meet.locZipCode }}
+                  </a>
+                </div>
+              </div>
+            </td>
+            <td class="text-nowrap">
+              {{ meet.meetDate }}<br>
+              {{ meet.meetTime }}
+            </td>
+            <td>
+              {{ meet.teamRequired }}<br>
+              {% if meet.isOptional == 1 %}Optional{% else %}Mandatory{% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <td>No meets have been scheduled.</td>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <form method="POST">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="page-header pbn">
+          <h3>Add New Meet</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3"><h4>Select Meet</h4></div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="meetIdInput">Select Existing Meet:</label>
+          <select name="trackMeetDetailId" id="meetIdInput" class="form-control">
+            <option value="0">&mdash; Select Existing Meet &mdash;</option>
+            {% for meet in meetList %}
+              <option value="{{ meet.trackMeetDetailId }}">{{ meet.meetName }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="meetNameInput">Add New Meet Name:</label>
+          <input type="text" name="meetName" id="meetNameInput" placeholder="Add meet not on list" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="meetTypeInput">Meet Type:</label>
+          <select name="meetType" id="meetTypeInput" class="form-control">
+            <option value="">&mdash; Select Meet Type &mdash;</option>
+            <option value="invitational">Invitational</option>
+            <option value="league">League</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3"><h4>Select Location</h4></div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="locationIdInput">Select Existing Location:</label>
+          <select name="locationId" id="locationIdInput" class="form-control">
+            <option value="0">&mdash; Select Existing Location &mdash;</option>
+            {% for locationId,locationName in locationList %}
+              <option value="{{ locationId }}">{{ locationName }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="locNameInput">Add New Location Name:</label>
+          <input type="text" name="locName" id="locNameInput" placeholder="Add location name not on list" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="locStreet1Input">Street Address:</label>
+          <input type="text" name="locStreet1" id="locStreet1Input" placeholder="123 Main St" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="locCityInput">City:</label>
+          <input type="text" name="locCity" id="locCityInput" placeholder="Some City" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="locStateInput">State:</label>
+          <select name="locState" id="locStateInput" class="form-control">
+            <option value="">&mdash; Select State &mdash;</option>
+            <option value="CA">California</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="locZipCodeInput">City:</label>
+          <input type="text" name="locZipCode" id="locZipCodeInput" placeholder="55555" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"><h4>Meet Sub-name</h4></div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="meetSubNameInput">Enter Meet Sub-name:</label>
+          <input type="text" name="meetSubName" id="meetSubNameInput" placeholder="example: #2" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"><h4>Meet Date/Time</h4></div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="meetDateInput">Enter Meet Date:</label>
+          <input type="text" name="meetDate" id="meetDateInput" placeholder="MM/DD/YYYY" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="meetTimeInput">Enter Meet Start Time:</label>
+          <input type="text" name="meetTime" id="meetTimeInput" placeholder="HH:MM (24-hour clock)" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3"><h4>Attendance</h4></div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="teamRequiredInput">Team Required:</label>
+          <select name="teamRequired" id="teamRequiredInput" class="form-control">
+            <option value="">&mdash; Select Option &mdash;</option>
+            <option value="Full Team">Full Team</option>
+            <option value="Varsity">Varsity</option>
+            <option value="Qualified Athletes">Qualified Athletes</option>
+            <option value="Qualified Athletes by practice attendance">Qualified Athletes by practice attendance</option>
+            <option value="Varsity Time-Qualified Athletes">Varsity Time-Qualified Athletes</option>
+            <option value="Distance Runners">Distance Runners</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="h5"><strong>Attendance is Optional:</strong></div>
+          <label for="isOptionalYes">Yes: </label>
+          <input type="radio" name="isOptional" id="isOptionalYes" value="1" checked>
+          <label for="isOptionalNo">No: </label>
+          <input type="radio" name="isOptional" id="isOptionalNo" value="0">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 text-center">
+        <button type="submit" class="btn btn-primary">Add new meet to schedule</button>
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}

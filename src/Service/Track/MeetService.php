@@ -11,6 +11,7 @@ use Mavericks\Entity\ResultMeasurement;
 use Mavericks\Entity\ResultTime;
 use Maverics\Entity\DB\TrackRelayTeamMember;
 use NuevaRunning\Entity\DB\TrackEventResult;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class MeetService
@@ -59,6 +60,94 @@ class MeetService
   }
 
   /**
+   * @return array
+   */
+  public function getMeetList()
+  {
+    return $this->TrackSQL->getTrackMeetList();
+  }
+
+  public function getLocationList()
+  {
+    $locations = $this->TrackSQL->getLocationList();
+    $locationById = [];
+
+    foreach ($locations as $location)
+    {
+      $display = sprintf('%s, %s, %s, %s', $location['locName'], $location['locStreet1'], $location['locCity'], $location['locState']);
+      $locationById[$location['locationId']] = $display;
+    }
+
+    return $locationById;
+  }
+
+  public function addMeetToSchedule(Request $Request)
+  {
+    $trackMeetDetailId = $this->getTrackMeetDetailId($Request);
+    $locationId        = $this->getLocationId($Request);
+
+    if (!$trackMeetDetailId || !$locationId)
+    {
+      return 0;
+    }
+
+    list($month, $day, $year) = explode('/', $Request->get('meetDate'));
+
+    $meetData = [
+      'trackMeetDetailId' => $trackMeetDetailId,
+      'locationId'        => $locationId,
+      'meetDate'          => sprintf('%s-%s-%s %s:00', $year, $month, $day, $Request->get('meetTime')),
+      'teamRequired'      => $Request->get('teamRequired'),
+      'isOptional'        => intval($Request->get('isOptional')),
+      'meetSubName'       => $Request->get('meetSubName')
+    ];
+
+    return $this->TrackSQL->addTrackMeet($meetData);
+  }
+
+  /**
+   * @param Request $Request
+   * @return int
+   */
+  private function getTrackMeetDetailId(Request $Request)
+  {
+    if ($Request->get('trackMeetDetailId'))
+    {
+      return $Request->get('trackMeetDetailId');
+    }
+
+    $meetDetails = [
+      'meetName' => $Request->get('meetName'),
+      'meetType' => $Request->get('meetType')
+    ];
+
+    return $this->TrackSQL->addTrackMeetDetails($meetDetails);
+  }
+
+  /**
+   * @param Request $Request
+   * @return int
+   */
+  private function getLocationId(Request $Request)
+  {
+    if ($Request->get('locationId'))
+    {
+      return $Request->get('locationId');
+    }
+
+    $location = [
+      'locName'    => $Request->get('locName'),
+      'locStreet1' => $Request->get('locStreet1'),
+      'locStreet2' => '',
+      'locCity'    => $Request->get('locCity'),
+      'locState'   => $Request->get('locState'),
+      'locZipCode' => $Request->get('locZipCode')
+    ];
+
+    return $this->TrackSQL->addLocation($location);
+  }
+
+  /**
    * @param $meetId
    * @return Season
    */
@@ -89,6 +178,86 @@ class MeetService
     }
 
     return $athletes;
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getAthletesNotOnTeam(Season $Season)
+  {
+    $data = $this->TrackSQL->getCurrentStudentsNotOnTeam($Season);
+    $athletes = [];
+
+    foreach ($data as $athlete)
+    {
+      $athlete['grade']       = $this->getGradeFromGraduationYear($Season, $athlete['class']);
+      $athlete['studentName'] = $athlete['firstName'] . ' ' . $athlete['lastName'];
+      $athletes[]             = $athlete;
+    }
+
+    return $athletes;
+  }
+
+  /**
+   * @param Season $Season
+   * @param array $studentData
+   */
+  public function addAthletesToTeam(Season $Season, array $studentData)
+  {
+    $this->TrackSQL->addStudentsToTrackSeason($Season, $studentData);
+  }
+
+  /**
+   * @param Season $Season
+   * @param array $studentData
+   */
+  public function addNewAthleteToTeam(Season $Season, array $studentData)
+  {
+    $studentData['class'] = $this->getGraduatingClassFromGrade($Season, $studentData['grade']);
+    $studentId = $this->TrackSQL->addNewStudent($studentData);
+
+    if ($studentId)
+    {
+      $studentData['studentId'] = $studentId;
+      $this->TrackSQL->addStudentsToTrackSeason($Season, [$studentData]);
+    }
+  }
+
+  /**
+   * @param Season $Season
+   * @param int $year
+   * @return int
+   */
+  private function getGradeFromGraduationYear(Season $Season, $year)
+  {
+    $grades = [
+      0 => 12,
+      1 => 11,
+      2 => 10,
+      3 => 9
+    ];
+
+    $diff = $year - intval($Season->getSeason());
+
+    return $grades[$diff];
+  }
+
+  /**
+   * @param Season $Season
+   * @param $grade
+   * @return int
+   */
+  private function getGraduatingClassFromGrade(Season $Season, $grade)
+  {
+    $yearDiff = [
+      9  => 3,
+      10 => 2,
+      11 => 1,
+      12 => 0
+    ];
+
+    return intval($Season->getSeason() + $yearDiff[$grade]);
   }
 
   /**

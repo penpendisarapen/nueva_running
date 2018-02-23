@@ -1,0 +1,163 @@
+{% set activePage = 'schedule' %}
+{% extends "Track/base.twig" %}
+
+{% block pageTitle %}Athlete Entry for {{ currentSeason }}{% endblock %}
+
+{% block content %}
+  <div class="page-header pbn"><h3>Athlete Entry for {{ currentSeason }}</h3></div>
+
+  <div  class="row">
+    <div class="col-md-5">
+      <div class="page-header pbn">
+        <h3>Current Girls Team</h3>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Athlete</th>
+          <th class="text-center">Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for athlete in seasonAthletes if athlete.gender == 'F' %}
+          <tr>
+            <td>{{ athlete.studentName }}</td>
+            <td class="text-center">{{ athlete.grade }}th</td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-md-5">
+      <div class="page-header pbn">
+        <h3>Current Boys Team</h3>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Athlete</th>
+          <th class="text-center">Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for athlete in seasonAthletes if athlete.gender == 'M' %}
+          <tr>
+            <td>{{ athlete.studentName }}</td>
+            <td class="text-center">{{ athlete.grade }}th</td>
+
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <form method="POST" action="/track/admin/athlete/list">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="page-header pbn">
+          <h3>Girls not on team</h3>
+        </div>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Athlete</th>
+              <th class="text-center">Grade</th>
+              <th class="text-center">Add to Team</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for athlete in athletesNotOnTeam if athlete.gender == 'F' %}
+              <tr>
+                <td>{{ athlete.studentName }}</td>
+                <td class="text-center">{{ athlete.grade }}th</td>
+                <td class="text-center">
+                  <input type="checkbox" name="student[]" value="{{ athlete.studentId }}|{{ athlete.grade }}">
+                </td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+      </div>
+
+      <div class="col-md-5">
+        <div class="page-header pbn">
+          <h3>Boys not on team</h3>
+        </div>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Athlete</th>
+              <th class="text-center">Grade</th>
+              <th class="text-center">Add to Team</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for athlete in athletesNotOnTeam if athlete.gender == 'M' %}
+              <tr>
+                <td>{{ athlete.studentName }}</td>
+                <td class="text-center">{{ athlete.grade }}th</td>
+                <td class="text-center">
+                  <input type="checkbox" name="student[]" value="{{ athlete.studentId }}|{{ athlete.grade }}">
+                </td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+      </div>
+      <div class="col-md-5">
+        <button type="submit" class="btn btn-primary">Add checked athletes to team</button>
+      </div>
+    </div>
+  </form>
+
+  <form method="POST" action="/track/admin/athlete/new">
+    <div  class="row">
+      <div class="col-md-10">
+        <div class="page-header pbn">
+          <h3>Add New Athlete</h3>
+        </div>
+        <table>
+          <tr>
+            <td class="pas">
+              <div>First Name</div>
+              <input type="text" name="firstName">
+            </td>
+            <td class="pas">
+              <div>Last Name</div>
+              <input type="text" name="lastName">
+            </td>
+          </tr>
+          <tr>
+            <td class="pas">
+              <div>Gender</div>
+              <select name="gender">
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+              </select>
+            </td>
+            <td class="pas">
+              <div>Grade</div>
+              <select name="grade">
+                <option value="9">9th</option>
+                <option value="10">10th</option>
+                <option value="11">11th</option>
+                <option value="12">12th</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="pas">
+              <button type="submit" class="btn btn-primary">Add new athlete to team</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </form>
+{% endblock %}

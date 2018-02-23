@@ -7,6 +7,7 @@ use Mavericks\Entity\DB\TrackRelayTeam;
 use Mavericks\Entity\DB\TrackStudentEvent;
 use Mavericks\Entity\ResultMeasurement;
 use Mavericks\Entity\ResultTime;
+use Mavericks\Entity\Season;
 use Maverics\Entity\DB\TrackRelayTeamMember;
 use NuevaRunning\Entity\DB\TrackEventResult;
 use Silex\Application;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Mavericks\Service\Track\MeetService;
 use Mavericks\Entity\DB\TrackEvent;
 use Mavericks\Entity\DB\Time;
+use Mavericks\Data\CurrentSeason;
 
 class AdminController
 {
@@ -38,6 +40,105 @@ class AdminController
     return $this->App['twig']->render('Track/Admin/home.twig');
   }
 
+
+  /**
+   * @return mixed
+   */
+  public function getAthleteEntry()
+  {
+    $Season            = new Season($this->getCurrentSeasonYear());
+    $currentAthletes   = $this->MeetService->getAthletesBySeason($Season);
+    $athletesNotOnTeam = $this->MeetService->getAthletesNotOnTeam($Season);
+
+    return $this->App['twig']->render(
+      'Track/Admin/athleteEntry.twig',
+      [
+        'currentSeason'     => $this->getCurrentSeasonYear(),
+        'seasonAthletes'    => $currentAthletes,
+        'athletesNotOnTeam' => $athletesNotOnTeam
+      ]
+    );
+  }
+
+  /**
+   * @param Request $Request
+   * @return mixed
+   */
+  public function postAthleteListEntry(Request $Request)
+  {
+    $studentList = $Request->get('student');
+
+    if (empty($studentList))
+    {
+      return $this->getAthleteEntry();
+    }
+
+    $athletesToAdd = [];
+
+    foreach ($studentList as $student)
+    {
+      list($studentId, $grade) = explode('|', $student);
+      $athletesToAdd[] = [
+        'studentId' => $studentId,
+        'grade'     => $grade
+      ];
+    }
+
+    $Season = new Season($this->getCurrentSeasonYear());
+
+    $this->MeetService->addAthletesToTeam($Season, $athletesToAdd);
+
+    return $this->App->redirect('/track/admin/athlete');
+  }
+
+  /**
+   * @param Request $Request
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function postNewAthleteEntry(Request $Request)
+  {
+    $params = [
+      'firstName' => $Request->get('firstName'),
+      'lastName'  => $Request->get('lastName'),
+      'gender'    => $Request->get('gender'),
+      'grade'     => $Request->get('grade')
+    ];
+
+    $Season = new Season($this->getCurrentSeasonYear());
+
+    $this->MeetService->addNewAthleteToTeam($Season, $params);
+
+    return $this->App->redirect('/track/admin/athlete');
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getMeetEntry()
+  {
+    $Season = new Season($this->getCurrentSeasonYear());
+
+    return $this->App['twig']->render(
+      'Track/Admin/meetEntry.twig',
+      [
+        'currentSeason'     => $this->getCurrentSeasonYear(),
+        'meetSchedule'   => $this->MeetService->getSeasonSchedule($Season),
+        'meetList' => $this->MeetService->getMeetList(),
+        'locationList' => $this->MeetService->getLocationList()
+      ]
+    );
+  }
+
+  /**
+   * @param Request $Request
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function postMeetEntry(Request $Request)
+  {
+    $this->MeetService->addMeetToSchedule($Request);
+
+    return $this->App->redirect('/track/admin/meet');
+  }
 
   /**
    * @param $meetId
@@ -481,5 +582,13 @@ class AdminController
     $inches = $Request->get('resultInches') + ($feet * 12);
 
     return new ResultMeasurement($inches);
+  }
+
+  /**
+   * @return mixed
+   */
+  private function getCurrentSeasonYear()
+  {
+    return $this->App['service.currentSeason']->getEndYear();
   }
 }

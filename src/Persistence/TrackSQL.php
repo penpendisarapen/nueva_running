@@ -119,6 +119,132 @@ class TrackSQL extends SQLPersistence
   /**
    * @return array
    */
+  public function getTrackMeetList()
+  {
+    $sql = "SELECT * FROM TrackMeetDetails ORDER BY meetName";
+
+    try
+    {
+      return $this->fetch($sql);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param array $details
+   * @return int
+   */
+  public function addTrackMeetDetails(array $details)
+  {
+    $sql = "INSERT INTO TrackMeetDetails (meetName, meetType) VALUES (:meetName, :meetType)";
+
+    $bindParams = [
+      ':meetName' => $details['meetName'],
+      ':meetType' => $details['meetType']
+    ];
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @return array
+   */
+  public function getLocationList()
+  {
+    $sql = "SELECT * FROM Location ORDER BY locName";
+
+    try
+    {
+      return $this->fetch($sql);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param array $location
+   * @return int
+   */
+  public function addLocation(array $location)
+  {
+    $sql = "
+      INSERT INTO Location
+        (locName, locStreet1, locStreet2, locCity, locState, locZipCode)
+      VALUES
+        (:locName, :locStreet1, :locStreet2, :locCity, :locState, :locZipCode)
+    ";
+
+    $bindParams = [
+      ':locName'    => $location['locName'],
+      ':locStreet1' => $location['locStreet1'],
+      ':locStreet2' => $location['locStreet2'],
+      ':locCity'    => $location['locCity'],
+      ':locState'   => $location['locState'],
+      ':locZipCode' => $location['locZipCode']
+    ];
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param array $trackMeet
+   * @return int
+   */
+  public function addTrackMeet(array $trackMeet)
+  {
+    $sql = "
+      INSERT INTO TrackMeet
+        (trackMeetDetailId, locationId, meetDate, teamRequired, isOptional, meetSubName)
+      VALUES 
+        (:trackMeetDetailId, :locationId, :meetDate, :teamRequired, :isOptional, :meetSubName)
+    ";
+
+    $bindParams = [
+      ':trackMeetDetailId' => $trackMeet['trackMeetDetailId'],
+      ':locationId'        => $trackMeet['locationId'],
+      ':meetDate'          => $trackMeet['meetDate'],
+      ':teamRequired'      => $trackMeet['teamRequired'],
+      ':isOptional'        => $trackMeet['isOptional'],
+      ':meetSubName'       => $trackMeet['meetSubName']
+    ];
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @return array
+   */
   public function getNextMeet()
   {
     $sql = "
@@ -242,6 +368,102 @@ class TrackSQL extends SQLPersistence
     {
       error_log($e->getMessage());
       return array('error');
+    }
+  }
+
+  /**
+   * @param Season $Season
+   * @return array
+   */
+  public function getCurrentStudentsNotOnTeam(Season $Season)
+  {
+    $sql = "
+      SELECT
+        S.studentId,
+        S.firstName,
+        S.lastName,
+        S.gender,
+        S.class
+      FROM
+        Student S
+      LEFT JOIN
+        TrackStudentSeason TSS ON S.studentId = TSS.studentId AND TSS.season = :season
+      WHERE
+        S.class >= :season
+      AND
+        TSS.season IS NULL 
+      ORDER BY
+        S.gender DESC,
+        S.firstName,
+        S.lastName
+    ";
+
+    $bindParams = array(':season' => $Season);
+
+    try
+    {
+      return $this->fetch($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return array('error');
+    }
+  }
+
+  /**
+   * @param array $student
+   * @return int|string
+   */
+  public function addNewStudent(array $student)
+  {
+    $sql = 'INSERT INTO Student (firstName, lastName, gender, class, creationDate, updateDate) VALUES (:firstName, :lastName, :gender, :class, NOW(), NOW())';
+
+    $bindParams = [
+      ':firstName' => $student['firstName'],
+      ':lastName'  => $student['lastName'],
+      ':gender'    => $student['gender'],
+      ':class'     => $student['class']
+    ];
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param Season $Season
+   * @param array $students
+   */
+  public function addStudentsToTrackSeason(Season $Season, array $students)
+  {
+    $sql = 'INSERT INTO TrackStudentSeason (studentId, grade, season) VALUES (:studentId, :grade, '. $Season . ')';
+
+    try
+    {
+      $dbh       = $this->getDBHandle();
+      $statement = $dbh->prepare($sql);
+
+      foreach ($students as $student)
+      {
+        $bindParams = [
+          ':studentId' => $student['studentId'],
+          ':grade'     => $student['grade']
+        ];
+
+        $statement->execute($bindParams);
+      }
+
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
     }
   }
 

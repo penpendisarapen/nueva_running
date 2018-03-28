@@ -184,8 +184,14 @@
       <h4>
         {{ event.eventGender }}
         {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
-        {{ event.eventName }}
+        {{ event.eventName }} 
+        <form name="deleteEvent{{ event.trackEventId }}" method="POST" action="/track/admin/meet/{{ meetId }}/event/{{ event.trackEventId }}/delete/">
+          <button type="submit" class="btn btn-danger btn-xs">
+            Delete Event
+          </button>
+        </form>
       </h4>
+
     </div>
 
     <table class="table table-striped">
@@ -228,7 +234,14 @@
           <td class="text-center">{{ result.place }}</td>
           <td class="text-center">{{ result.overallPlace }}</td>
           <td class="text-right">
-            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updateModal{{ result.trackStudentEventId }}">
+            <form name="deleteEventEntry{{ result.trackStudentEventId }}" method="POST" action="/track/admin/meet/{{ meetId }}/athlete/event/{{ result.trackStudentEventId }}/">
+              <button type="submit" class="btn btn-danger btn-xs">
+                Delete Entry
+              </button>
+            </form>
+          </td>
+          <td class="text-right">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#updateModal{{ result.trackStudentEventId }}">
               Update Result
             </button>
 

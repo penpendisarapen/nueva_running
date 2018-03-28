@@ -270,6 +270,18 @@ class AdminController
   }
 
   /**
+   * @param $meetId
+   * @param $eventId
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function deleteMeetEvent($meetId, $eventId)
+  {
+    $this->MeetService->deleteTrackEvent($eventId);
+
+    return $this->App->redirect("/track/admin/meet/$meetId/");
+  }
+
+  /**
    * @param Request $Request
    * @param $meetId
    * @param $eventId
@@ -284,6 +296,18 @@ class AdminController
     $this->MeetService->updateStudentEvent($TrackStudentEvent);
 
     return $this->App->redirect("/track/admin/meet/$meetId/event/$eventId/");
+  }
+
+  /**
+   * @param $meetId
+   * @param $trackStudentEventId
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function deleteAthleteEntry($meetId, $trackStudentEventId)
+  {
+    $this->MeetService->deleteStudentEvent($trackStudentEventId);
+
+    return $this->App->redirect("/track/admin/meet/$meetId/");
   }
 
   /**

@@ -1459,6 +1459,29 @@ class TrackSQL extends SQLPersistence
   }
 
   /**
+   * @param $trackEventId
+   * @return int|string
+   */
+  public function deleteTrackEvent($trackEventId)
+  {
+    $sql = "DELETE FROM TrackEvent WHERE trackEventId = :trackEventId";
+
+    $bindParams = [
+      ':trackEventId' => $trackEventId
+    ];
+
+    try
+    {
+      return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
    * @param TrackStudentEvent $TrackStudentEvent
    * @return int|string
    */
@@ -1487,6 +1510,29 @@ class TrackSQL extends SQLPersistence
     try
     {
       return $this->insert($sql, $bindParams);
+    }
+    catch (\PDOException $e)
+    {
+      error_log($e->getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * @param int $trackStudentEventId
+   * @return int
+   */
+  public function deleteStudentEvent($trackStudentEventId)
+  {
+    $sql = 'DELETE FROM TrackStudentEvent WHERE trackStudentEventId = :trackStudentEventId';
+
+    $bindParams = [
+      ':trackStudentEventId' => $trackStudentEventId
+    ];
+
+    try
+    {
+      return $this->update($sql, $bindParams);
     }
     catch (\PDOException $e)
     {

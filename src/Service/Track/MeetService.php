@@ -382,6 +382,15 @@ class MeetService
   }
 
   /**
+   * @param $trackStudentEventId
+   * @return int
+   */
+  public function deleteStudentEvent($trackStudentEventId)
+  {
+    return $this->TrackSQL->deleteStudentEvent($trackStudentEventId);
+  }
+
+  /**
    * @param TrackEventResult $TrackEventResult
    * @return int|string
    */
@@ -413,6 +422,15 @@ class MeetService
   public function addMeetEvent(TrackEvent $TrackEvent)
   {
     return $this->TrackSQL->addTrackEvent($TrackEvent);
+  }
+
+  /**
+   * @param $trackEventId
+   * @return int|string
+   */
+  public function deleteTrackEvent($trackEventId)
+  {
+    return $this->TrackSQL->deleteTrackEvent($trackEventId);
   }
 
   /**

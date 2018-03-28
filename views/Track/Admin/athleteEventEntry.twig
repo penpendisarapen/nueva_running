@@ -184,7 +184,7 @@
       <h4>
         {{ event.eventGender }}
         {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
-        {{ event.eventName }} 
+        {{ event.eventName }}
         <form name="deleteEvent{{ event.trackEventId }}" method="POST" action="/track/admin/meet/{{ meetId }}/event/{{ event.trackEventId }}/delete/">
           <button type="submit" class="btn btn-danger btn-xs">
             Delete Event
@@ -358,7 +358,12 @@
       <h4>
         {{ event.eventGender }}
         {% if event.eventSubType %}{{ event.eventSubType }}{% endif %}
-        {{ event.eventName }}
+        {{ event.eventName }} {{ event.trackEventId }}
+        <form name="deleteEvent{{ event.trackEventId }}" method="POST" action="/track/admin/meet/{{ meetId }}/event/{{ event.trackEventId }}/delete/">
+          <button type="submit" class="btn btn-danger btn-xs">
+            Delete Event
+          </button>
+        </form>
       </h4>
     </div>
 
